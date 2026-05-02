@@ -1,0 +1,1307 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>タロットの意味 | Pinda Lab</title>
+<meta name="description" content="78枚すべてのタロットカードの意味をすばやく検索。正位置・逆位置、恋愛・仕事・金銭の意味を一覧。">
+<meta property="og:title" content="タロットの意味">
+<meta property="og:description" content="プロのリーダー向け タロット78枚 即時リファレンス">
+<meta property="og:url" content="https://pndshch.github.io/tarot-imi/">
+<meta name="twitter:card" content="summary">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+body {
+    background: radial-gradient(ellipse at top, #1e1b4b 0%, #0f0a1f 60%, #000 100%);
+    color: #e6e3f0;
+    font-family: 'Hiragino Mincho ProN', 'Noto Serif JP', 'Yu Mincho', serif;
+    min-height: 100vh;
+    padding: 20px 14px 40px;
+    user-select: none;
+}
+.container { max-width: 720px; margin: 0 auto; }
+
+.topbar {
+    display: flex; justify-content: space-between;
+    color: #a78bfa; font-size: 12px; margin-bottom: 12px;
+}
+.topbar a { color: #a78bfa; text-decoration: none; font-family: system-ui, sans-serif; }
+
+.brand {
+    text-align: center;
+    margin-bottom: 18px;
+}
+.brand-title {
+    font-size: 32px;
+    font-weight: 700;
+    background: linear-gradient(135deg, #fbbf24, #f59e0b, #fbbf24);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    letter-spacing: 4px;
+}
+.brand-sub { color: #a78bfa; font-size: 12px; margin-top: 6px; letter-spacing: 2px; }
+
+.controls {
+    background: rgba(30,27,75,0.6);
+    border: 1px solid rgba(167,139,250,0.3);
+    border-radius: 12px;
+    padding: 12px;
+    margin-bottom: 12px;
+    backdrop-filter: blur(10px);
+}
+
+.search-row {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 10px;
+}
+input[type="text"] {
+    flex: 1;
+    padding: 12px 14px;
+    background: rgba(0,0,0,0.4);
+    border: 1px solid rgba(167,139,250,0.4);
+    color: #fff;
+    border-radius: 8px;
+    font-size: 15px;
+    font-family: inherit;
+    outline: none;
+}
+input[type="text"]:focus { border-color: #fbbf24; }
+
+.actions-row {
+    display: flex; gap: 6px;
+    flex-wrap: wrap;
+}
+.act {
+    flex: 1;
+    min-width: 80px;
+    padding: 10px 8px;
+    background: rgba(167,139,250,0.15);
+    border: 1px solid rgba(167,139,250,0.4);
+    color: #e6e3f0;
+    border-radius: 8px;
+    font-family: 'Hiragino Maru Gothic ProN', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+}
+.act:hover { background: rgba(167,139,250,0.3); }
+.act.gold {
+    background: linear-gradient(135deg, rgba(251,191,36,0.25), rgba(245,158,11,0.25));
+    border-color: rgba(251,191,36,0.6);
+    color: #fbbf24;
+}
+
+.filters {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 12px;
+    overflow-x: auto;
+    padding-bottom: 4px;
+    scrollbar-width: none;
+}
+.filters::-webkit-scrollbar { display: none; }
+.filt {
+    flex-shrink: 0;
+    padding: 6px 12px;
+    background: rgba(30,27,75,0.6);
+    border: 1px solid rgba(167,139,250,0.3);
+    border-radius: 16px;
+    color: #a78bfa;
+    font-size: 12px;
+    font-family: system-ui, sans-serif;
+    cursor: pointer;
+    white-space: nowrap;
+}
+.filt.active {
+    background: rgba(251,191,36,0.2);
+    border-color: #fbbf24;
+    color: #fbbf24;
+}
+
+/* Card grid */
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(96px, 1fr));
+    gap: 6px;
+}
+
+.card {
+    aspect-ratio: 2 / 3;
+    background: linear-gradient(160deg, var(--c1, #312e81), var(--c2, #1e1b4b));
+    border: 1px solid rgba(251,191,36,0.4);
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 6px 4px;
+    cursor: pointer;
+    position: relative;
+    transition: transform 0.15s, border-color 0.15s, box-shadow 0.15s;
+    overflow: hidden;
+    text-align: center;
+}
+.card:hover { transform: translateY(-3px); border-color: #fbbf24; box-shadow: 0 6px 20px rgba(251,191,36,0.3); }
+.card .em { font-size: 32px; margin-bottom: 2px; line-height: 1; }
+.card .nm {
+    font-size: 11px;
+    font-weight: 700;
+    line-height: 1.2;
+    color: #fff;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.7);
+}
+.card .no {
+    position: absolute;
+    top: 4px; left: 4px;
+    color: rgba(251,191,36,0.7);
+    font-size: 9px;
+    font-weight: 700;
+}
+[data-st="major"] { --c1: #4c1d95; --c2: #1e1b4b; }
+[data-st="wands"]  { --c1: #7f1d1d; --c2: #431407; }
+[data-st="cups"]   { --c1: #1e3a8a; --c2: #0c4a6e; }
+[data-st="swords"] { --c1: #374151; --c2: #111827; }
+[data-st="pents"]  { --c1: #14532d; --c2: #052e16; }
+
+/* Drawn cards (for spread) */
+.spread-area {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 12px;
+}
+.draw-slot {
+    width: 100%;
+    max-width: 220px;
+    text-align: center;
+}
+.draw-slot .pos-label {
+    font-size: 11px;
+    color: #fbbf24;
+    margin-bottom: 4px;
+    letter-spacing: 2px;
+    font-family: system-ui, sans-serif;
+}
+.draw-card {
+    aspect-ratio: 2 / 3;
+    border-radius: 10px;
+    border: 2px solid rgba(251,191,36,0.5);
+    background: linear-gradient(160deg, var(--c1, #312e81), var(--c2, #1e1b4b));
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+    cursor: pointer;
+    text-align: center;
+    position: relative;
+}
+.draw-card.reversed { transform: rotate(180deg); }
+.draw-card.reversed .nm-jp, .draw-card.reversed .em, .draw-card.reversed .no, .draw-card.reversed .rev-tag { transform: rotate(180deg); }
+.draw-card .em { font-size: 56px; margin-bottom: 4px; }
+.draw-card .nm-jp { font-size: 16px; font-weight: 800; color: #fff; }
+.draw-card .nm-en { font-size: 10px; color: rgba(255,255,255,0.7); margin-top: 2px; }
+.draw-card .rev-tag {
+    position: absolute;
+    top: 4px; right: 4px;
+    background: #f87171;
+    color: #fff;
+    font-size: 9px;
+    padding: 2px 6px;
+    border-radius: 8px;
+    font-family: system-ui, sans-serif;
+    font-weight: 800;
+    letter-spacing: 1px;
+}
+.spread-mode .grid { display: none; }
+.spread-mode .filters { display: none; }
+.spread-mode .search-row { display: none; }
+
+/* Detail modal */
+.modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.85);
+    z-index: 100;
+    display: none;
+    align-items: flex-end;
+    justify-content: center;
+    backdrop-filter: blur(8px);
+}
+.modal.show { display: flex; animation: fadein 0.2s; }
+@keyframes fadein { from { opacity: 0; } to { opacity: 1; } }
+
+.modal-inner {
+    background: linear-gradient(160deg, #1e1b4b, #0f0a1f);
+    border: 1px solid rgba(251,191,36,0.4);
+    border-radius: 20px 20px 0 0;
+    width: 100%;
+    max-width: 560px;
+    max-height: 92vh;
+    overflow-y: auto;
+    padding: 18px 18px 32px;
+    animation: slideup 0.3s cubic-bezier(.2,.7,.3,1);
+}
+@keyframes slideup { from { transform: translateY(100%); } to { transform: translateY(0); } }
+
+.modal-close {
+    position: sticky;
+    top: 0;
+    margin-left: auto;
+    margin-bottom: -32px;
+    width: 36px; height: 36px;
+    background: rgba(0,0,0,0.5);
+    border: 1px solid rgba(167,139,250,0.4);
+    color: #fff;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 18px;
+    display: flex; align-items: center; justify-content: center;
+    z-index: 10;
+}
+
+.detail-card {
+    aspect-ratio: 2 / 3;
+    max-width: 200px;
+    margin: 0 auto 16px;
+    border-radius: 12px;
+    border: 2px solid rgba(251,191,36,0.5);
+    background: linear-gradient(160deg, var(--c1, #312e81), var(--c2, #1e1b4b));
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 12px;
+    text-align: center;
+    position: relative;
+}
+.detail-card.reversed { transform: rotate(180deg); }
+.detail-card.reversed > * { transform: rotate(180deg); }
+.detail-card .em { font-size: 60px; margin-bottom: 6px; }
+.detail-card .nm-jp { font-size: 18px; font-weight: 800; color: #fff; }
+.detail-card .nm-en { font-size: 11px; color: rgba(255,255,255,0.7); margin-top: 2px; font-style: italic; }
+.detail-card .nm-num { font-size: 10px; color: rgba(251,191,36,0.7); position: absolute; top: 6px; left: 8px; font-family: system-ui, sans-serif; font-weight: 700; }
+
+.tabs {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 14px;
+    background: rgba(0,0,0,0.4);
+    padding: 4px;
+    border-radius: 10px;
+}
+.tab {
+    flex: 1;
+    padding: 8px;
+    text-align: center;
+    color: #a78bfa;
+    border-radius: 7px;
+    cursor: pointer;
+    font-family: system-ui, sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+.tab.active.up { background: linear-gradient(135deg, rgba(251,191,36,0.25), rgba(245,158,11,0.15)); color: #fbbf24; }
+.tab.active.rev { background: linear-gradient(135deg, rgba(248,113,113,0.25), rgba(220,38,38,0.15)); color: #f87171; }
+.tab.active.both { background: linear-gradient(135deg, rgba(167,139,250,0.25), rgba(124,58,237,0.15)); color: #c4b5fd; }
+
+.kw-row {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-bottom: 16px;
+    justify-content: center;
+}
+.kw {
+    background: rgba(251,191,36,0.15);
+    border: 1px solid rgba(251,191,36,0.4);
+    color: #fbbf24;
+    padding: 4px 10px;
+    border-radius: 14px;
+    font-size: 12px;
+    font-family: 'Hiragino Maru Gothic ProN', sans-serif;
+    font-weight: 700;
+}
+
+.section {
+    margin-bottom: 14px;
+    padding: 12px 14px;
+    background: rgba(0,0,0,0.3);
+    border-radius: 10px;
+    border-left: 3px solid var(--accent, #a78bfa);
+}
+.section.up { --accent: #fbbf24; }
+.section.rev { --accent: #f87171; }
+
+.section-title {
+    font-size: 11px;
+    color: var(--accent, #a78bfa);
+    letter-spacing: 2px;
+    margin-bottom: 6px;
+    font-family: system-ui, sans-serif;
+    font-weight: 800;
+    text-transform: uppercase;
+}
+.section-body {
+    font-size: 14px;
+    line-height: 1.7;
+    color: #e6e3f0;
+}
+.cat-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-top: 8px;
+}
+@media (max-width: 380px) { .cat-grid { grid-template-columns: 1fr; } }
+.cat {
+    background: rgba(0,0,0,0.3);
+    padding: 8px 10px;
+    border-radius: 8px;
+    border: 1px solid rgba(167,139,250,0.2);
+}
+.cat-label {
+    font-size: 10px;
+    color: #a78bfa;
+    letter-spacing: 1.5px;
+    font-family: system-ui, sans-serif;
+    margin-bottom: 3px;
+    font-weight: 700;
+}
+.cat-text {
+    font-size: 13px;
+    line-height: 1.5;
+    color: #e6e3f0;
+}
+.advice {
+    background: linear-gradient(135deg, rgba(251,191,36,0.15), rgba(245,158,11,0.1));
+    border: 1px solid rgba(251,191,36,0.3);
+    padding: 12px 14px;
+    border-radius: 10px;
+    margin-top: 12px;
+}
+.advice-label {
+    font-size: 11px;
+    color: #fbbf24;
+    letter-spacing: 2px;
+    margin-bottom: 4px;
+    font-weight: 800;
+    font-family: system-ui, sans-serif;
+}
+.advice-text {
+    font-size: 14px;
+    line-height: 1.6;
+    color: #fef3c7;
+}
+
+.empty-msg {
+    text-align: center;
+    color: #6d7680;
+    padding: 40px 20px;
+    grid-column: 1 / -1;
+    font-size: 14px;
+}
+
+.footer {
+    margin-top: 20px;
+    text-align: center;
+    color: #6d7680;
+    font-size: 11px;
+    font-family: system-ui, sans-serif;
+}
+.footer a { color: #6d7680; text-decoration: none; }
+</style>
+</head>
+<body>
+<div class="container">
+
+<div class="topbar">
+    <a href="https://pndshch.github.io/">← Pinda Lab</a>
+    <span style="font-family:system-ui">タロットの意味</span>
+</div>
+
+<div class="brand">
+    <div class="brand-title">タロットの意味</div>
+    <div class="brand-sub">78 CARDS · QUICK REFERENCE</div>
+</div>
+
+<div class="controls">
+    <div class="search-row">
+        <input id="search" type="text" placeholder="🔍 カード名・キーワードで検索 (例: 愛、塔、Lovers)" autocomplete="off" />
+    </div>
+    <div class="actions-row">
+        <button class="act gold" id="draw1">🃏 1枚 引く</button>
+        <button class="act gold" id="draw3">🔮 3枚 (過去・現在・未来)</button>
+        <button class="act" id="show-all">📚 全カード一覧</button>
+    </div>
+</div>
+
+<div class="filters" id="filters">
+    <span class="filt active" data-f="all">すべて (78)</span>
+    <span class="filt" data-f="major">大アルカナ (22)</span>
+    <span class="filt" data-f="wands">🔥 ワンド (14)</span>
+    <span class="filt" data-f="cups">💧 カップ (14)</span>
+    <span class="filt" data-f="swords">🌀 ソード (14)</span>
+    <span class="filt" data-f="pents">🌳 ペンタクル (14)</span>
+</div>
+
+<div class="spread-area" id="spread-area"></div>
+<div class="grid" id="grid"></div>
+
+<div class="footer">
+    <p><a href="https://pndshch.github.io/">© Pinda Lab</a> · <a href="https://www.buymeacoffee.com/pndshch" target="_blank">☕</a></p>
+    <p style="margin-top:6px; font-size:10px; opacity:0.7">解釈は標準的なライダー版に基づく目安。読み手の直感が最後の答えです。</p>
+</div>
+</div>
+
+<!-- Modal -->
+<div class="modal" id="modal">
+    <div class="modal-inner" id="modal-inner">
+        <button class="modal-close" id="close">✕</button>
+        <div class="detail-card" id="d-card">
+            <div class="nm-num" id="d-no"></div>
+            <div class="em" id="d-em"></div>
+            <div class="nm-jp" id="d-nm"></div>
+            <div class="nm-en" id="d-en"></div>
+        </div>
+
+        <div class="tabs">
+            <div class="tab both active" data-tab="both">両方表示</div>
+            <div class="tab up" data-tab="up">正位置</div>
+            <div class="tab rev" data-tab="rev">逆位置</div>
+        </div>
+
+        <div class="kw-row" id="d-kw"></div>
+
+        <div id="d-up">
+            <div class="section up">
+                <div class="section-title">▲ 正位置 — 総合</div>
+                <div class="section-body" id="d-u"></div>
+                <div class="cat-grid">
+                    <div class="cat"><div class="cat-label">💕 恋愛</div><div class="cat-text" id="d-lu"></div></div>
+                    <div class="cat"><div class="cat-label">💼 仕事</div><div class="cat-text" id="d-wu"></div></div>
+                    <div class="cat"><div class="cat-label">💰 金銭</div><div class="cat-text" id="d-mu"></div></div>
+                    <div class="cat"><div class="cat-label">🌿 健康</div><div class="cat-text" id="d-hu"></div></div>
+                </div>
+            </div>
+        </div>
+
+        <div id="d-rev">
+            <div class="section rev">
+                <div class="section-title">▼ 逆位置 — 総合</div>
+                <div class="section-body" id="d-r"></div>
+                <div class="cat-grid">
+                    <div class="cat"><div class="cat-label">💕 恋愛</div><div class="cat-text" id="d-lr"></div></div>
+                    <div class="cat"><div class="cat-label">💼 仕事</div><div class="cat-text" id="d-wr"></div></div>
+                    <div class="cat"><div class="cat-label">💰 金銭</div><div class="cat-text" id="d-mr"></div></div>
+                    <div class="cat"><div class="cat-label">🌿 健康</div><div class="cat-text" id="d-hr"></div></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="advice">
+            <div class="advice-label">✦ アドバイス</div>
+            <div class="advice-text" id="d-ad"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+'use strict';
+// 78 cards data
+const C = (n,en,no,st,em,kw,u,r,lu,lr,wu,wr,mu,mr,hu,hr,ad) => ({n,en,no,st,em,kw,u,r,lu,lr,wu,wr,mu,mr,hu,hr,ad});
+
+const CARDS = [
+// === Major Arcana ===
+C('愚者','The Fool',0,'major','🃏',['始まり','冒険','無垢','可能性'],
+  '新しい門出。直感のまま飛び出す自由と勇気。可能性に満ちた状態。',
+  '無謀。準備不足。軽率さ。責任からの逃避。',
+  '自由な恋・新しい出会い・解放感','気まぐれ・不誠実・続かない',
+  '革新的アイデア・転職好機・独立','計画不足・思いつき・頓挫',
+  '大胆な投資・新事業','散財・衝動買い・無計画',
+  '活力・身軽','落ち着かない・不調',
+  '怖さは行動が解決する。直感に従って動こう。'),
+C('魔術師','The Magician',1,'major','🪄',['創造','意志','技能','実現'],
+  '自分の力で道を切り開く。才能・実行力・意志の力。可能性を現実にする。',
+  '自信過剰・空回り・口先だけ・未熟・ごまかし。',
+  '主導的アプローチ吉・新展開','駆け引きの失敗・誠実さ不足',
+  'スキル評価・新企画成功','実力不足・虚勢・中途半端',
+  '才能でお金が動く・副業','不安定・見積もり甘さ',
+  'バイタリティ','疲労・神経過敏',
+  '持っているもので十分。一歩動こう。'),
+C('女教皇','The High Priestess',2,'major','🌙',['直感','知性','内省','神秘'],
+  '内なる声を聞く。冷静な判断・知恵・慎重・秘密の保持。',
+  '直感の鈍り・感情的・隠し事の発覚・優柔不断。',
+  '精神的な絆・静かな愛・相互理解','距離感・本音を言えない・不信',
+  '学び・研究・専門性・慎重さ吉','迷い・知識不足・優柔不断',
+  '慎重な運用・貯蓄・情報優位','情報不足・判断ミス',
+  '心身のバランス良好','ホルモンバランス・婦人科系注意',
+  '静かに待つ。答えはあなたの中にある。'),
+C('女帝','The Empress',3,'major','👑',['豊穣','母性','創造','愛'],
+  '豊かさ・母性的愛情・創造性・繁栄・女性性。',
+  '過保護・依存・停滞・嫉妬・不毛。',
+  '愛情豊か・結婚・妊娠・安定した関係','嫉妬・束縛・すれ違い',
+  '創造的成功・繁栄・チームワーク','マンネリ・生産性低下',
+  '安定収入・豊かさ','浪費・見栄',
+  '健康・出産','婦人科・更年期・不調',
+  '自分を慈しむ。豊かさはあなたの中にある。'),
+C('皇帝','The Emperor',4,'major','🏛️',['権威','安定','責任','構築'],
+  '強い意志・責任・リーダーシップ・達成・規律。',
+  '独裁・頑固・支配的・優柔不断・無力。',
+  '頼れるパートナー・安定','横暴・束縛・押し付け',
+  '昇進・組織での成功・責任ある立場','ワンマン・抑圧・停滞',
+  '安定した資産・堅実投資','浪費・ステータス重視のミス',
+  '頑強','過労・高血圧・ストレス',
+  '主導権を握って。決断するときは決断を。'),
+C('教皇','The Hierophant',5,'major','⛪',['伝統','道徳','信頼','保守'],
+  '道徳的助言・教師・伝統・信頼関係・正統な道。',
+  '形骸化・押し付け・独断・規範からの逸脱。',
+  '結婚・誠実な関係・家族の祝福','保守的すぎ・価値観の違い',
+  'メンター・伝統的な仕事・信頼','古い体質・形式主義',
+  '堅実・慎重・信頼ある投資','古い習慣で損失',
+  '保守的なケア吉','古い疾患の再発',
+  '経験者に聞く。基本に立ち返る。'),
+C('恋人','The Lovers',6,'major','💞',['愛','選択','調和','結合'],
+  '真の愛・運命的な選択・調和・心の結合。',
+  '浮気心・誤った選択・不調和・三角関係。',
+  '運命の出会い・深い愛・結ばれる','三角関係・迷い・不一致',
+  '良いパートナーシップ・共同事業','仲違い・選択ミス',
+  '良い取引・共同投資','共同事業の失敗',
+  '心身ともに調和','心の不安定',
+  '心の声に従って選択を。'),
+C('戦車','The Chariot',7,'major','⚔️',['勝利','前進','意志','推進'],
+  '困難を乗り越える・勝利・意志力で前進。',
+  '暴走・自制心の欠如・停滞・敗北。',
+  '積極的アプローチ成功・関係前進','焦り・押しすぎ・衝突',
+  '競争に勝つ・目標達成・出世','暴走・独走・頓挫',
+  '勝負運・積極投資','賭けの失敗・損失',
+  '活力・体力勝負','過労・事故注意',
+  '進むと決めたら全力で。'),
+C('力','Strength',8,'major','🦁',['強さ','忍耐','勇気','克己'],
+  '内面の強さ・忍耐・優しい支配・自制・本能の制御。',
+  '弱気・不信・感情に飲まれる・暴力的。',
+  '信頼・深い愛・ありのままを受け入れる','不安・嫉妬・感情的衝突',
+  '困難を冷静に克服・信頼を得る','ストレス・自信喪失',
+  '着実・堅実な成長','不安からの誤判断',
+  '免疫力高い','体力低下・慢性疲労',
+  '焦らず静かに進む。優しさは強さ。'),
+C('隠者','The Hermit',9,'major','🕯️',['内省','孤独','探求','賢明'],
+  '内省・知恵・独自の道・賢明な選択・精神的探求。',
+  '孤立・頑固・引きこもり・視野狭窄。',
+  '深い理解・精神的な絆','寂しさ・距離感・すれ違い',
+  '専門性・独立・研究・内省的成長','孤立・独善・停滞',
+  '慎重で堅実・貯蓄','情報不足・ケチ',
+  '休息・養生','過労・ふさぎ込み',
+  '一人になる時間を作る。答えは内にある。'),
+C('運命の輪','Wheel of Fortune',10,'major','🎡',['転機','変化','運命','好転'],
+  '転機・運命の好転・新展開・流れに乗る。',
+  '不運・停滞・悪い変化・逆境。',
+  '運命的出会い・関係の進展','タイミングずれ・不安定',
+  '大きな転機・昇進・好機','計画外の変更・後退',
+  '思わぬ収入・運上昇','損失・損切りのとき',
+  '体調好転','体調変動・サイクル乱れ',
+  '流れに乗って。今がそのとき。'),
+C('正義','Justice',11,'major','⚖️',['公正','判断','真実','結果'],
+  '公正な判断・バランス・正しい結果・契約・真実。',
+  '不公平・偏見・誤った判断・罰・訴訟負け。',
+  '誠実な関係・結婚・責任','不誠実・偏見・不当な扱い',
+  '正当な評価・契約成立・訴訟勝利','不当評価・トラブル・訴訟負け',
+  '公正な取引・適正価格','詐欺・不当な損失',
+  'バランスとれた健康','偏った生活で不調',
+  '客観的に見る。事実に基づいて。'),
+C('吊るされた男','The Hanged Man',12,'major','🙃',['試練','視点転換','犠牲','停滞'],
+  '視点を変える・忍耐・自己犠牲・内省・修行期。',
+  '無駄な努力・停滞・被害者意識・諦め。',
+  '待つことで成熟・見方を変える','報われない愛・執着',
+  '逆境を学びに・修行期・転換期','努力が実らない・抜け出せない',
+  '投資の塩漬け・長期視野','無駄遣い・損切りできない',
+  '休息のとき','長引く不調',
+  '視点を変えて。今は学びのとき。'),
+C('死神','Death',13,'major','💀',['終わり','変容','再生','手放し'],
+  '終わりと始まり・変容・リセット・執着の手放し。',
+  '停滞・変化への抵抗・執着・終わらせられない。',
+  '関係の変化・終了・新しい段階へ','別れの長期化・惰性',
+  '退職・転職・刷新・終結','終わらせられない・引きずる',
+  '損切り・整理・新しい流れ','不要な出費の継続',
+  '体調の節目','慢性化',
+  '終わらせるべきものを終わらせる。'),
+C('節制','Temperance',14,'major','🧘',['調和','節度','融合','調整'],
+  'バランス・調和・調整・適応・ゆっくり成長。',
+  '不調和・過剰・自制心欠如・衝突・極端。',
+  '安定した関係・相互理解・長続き','価値観の不一致・不調和',
+  'チームワーク・調整役・安定成長','不調和・過剰負担・ミス',
+  'バランスのとれた管理・長期投資','浪費・節制不足',
+  '心身の調和','ストレス・不摂生',
+  '急がず。中庸が最善。'),
+C('悪魔','The Devil',15,'major','😈',['束縛','欲望','執着','誘惑'],
+  '物欲・執着・誘惑・束縛・依存・本能的欲求。',
+  '解放・束縛からの脱却・悟り・自立。',
+  '強い肉欲・依存的関係・不倫','関係から抜け出す・自由',
+  '縛られた仕事・お金優先','抜け出す・独立',
+  '物質的成功・しかし執着の罠','借金からの解放・健全化',
+  '依存・暴飲暴食','改善・節制成功',
+  '何に縛られているか自覚を。'),
+C('塔','The Tower',16,'major','🏗️',['崩壊','激変','衝撃','解放'],
+  '突然の崩壊・激変・衝撃・目覚め・既成概念の破壊。',
+  'ゆるやかな変化・危機回避・再構築。',
+  '突然の別れ・激しい衝突・価値観崩壊','関係修復・危機を乗り越える',
+  '突然の解雇・倒産・構造変化','ピンチを脱する・軌道修正',
+  '大きな損失・突然の出費','ぎりぎり回避・再建',
+  '事故・急病注意','回復に向かう',
+  '崩れたあとに本物が残る。'),
+C('星','The Star',17,'major','⭐',['希望','ひらめき','未来','癒し'],
+  '希望・未来への光・癒し・純粋な願い・霊感。',
+  '失望・希望喪失・悲観・停滞・現実逃避。',
+  '理想の出会い・純愛・夢の実現','高望み・現実逃避・失望',
+  '夢の実現・新しい才能開花','理想と現実の乖離・無力感',
+  '願いが叶う・寄付・援助','損失・当てが外れる',
+  '回復・癒し','疲弊・無気力',
+  '未来を信じて。夢は導きの星。'),
+C('月','The Moon',18,'major','🌙',['不安','神秘','迷い','幻想'],
+  '不安・迷い・見えない真実・直感・潜在意識。',
+  '真実の発覚・不安解消・迷いの晴れ・直感戻る。',
+  '不安定・すれ違い・秘密','真実発覚・不安解消',
+  '不確実性・隠れた問題','問題発覚し改善・見通し',
+  '詐欺・誤情報注意','損失の発覚・整理',
+  '精神不安・不眠','安定取り戻す',
+  '焦らない。霧は必ず晴れる。'),
+C('太陽','The Sun',19,'major','☀️',['成功','喜び','活力','達成'],
+  '成功・喜び・達成・活力・明るい未来・祝福。',
+  '一時停滞・過信・ぼんやりした成功・燃え尽き。',
+  '純粋な愛・結婚・子宝・円満','マンネリ・自己中・離別予兆',
+  '大成功・栄光・評価','成功への足踏み・過信',
+  '大幅な利益・繁栄','一時的な減益',
+  '健康・元気いっぱい','疲れ・日射病注意',
+  '喜びは伝染する。明るく行こう。'),
+C('審判','Judgement',20,'major','📯',['復活','覚醒','決断','再生'],
+  '過去のやり直し・覚醒・決断・再生・呼びかけに応える。',
+  '過去にとらわれる・決断できない・後悔。',
+  '復縁・運命的な再会・決断','過去への執着・決断できない',
+  '復活・再評価・転職成功','過去のミスが響く・決断遅れ',
+  '過去の投資が実る・再起','損失の蒸し返し',
+  '回復・蘇生','過去の不調が再発',
+  '過去を清算して動き出すとき。'),
+C('世界','The World',21,'major','🌍',['完成','達成','統合','成就'],
+  '完成・目標達成・統合・円満・新しい段階へ。',
+  '未完成・停滞・達成感の欠如・あと一歩。',
+  '結婚・長期的な幸せ・完璧な絆','不完全・進展しない',
+  'プロジェクト完成・目標達成・卒業','あと一歩・詰めの甘さ',
+  '経済的安定・長期的な富','達成寸前で頓挫',
+  '完全な健康','疲れ・あと一歩で回復',
+  '完成を祝って。次のステージへ。'),
+
+// === Wands (火・行動・情熱) ===
+C('ワンドのエース','Ace of Wands',1,'wands','🔥',['情熱','始動','創造','閃き'],
+  '情熱の芽生え・新しい挑戦・創造のエネルギー。',
+  'やる気がでない・計画頓挫・空回り。',
+  '情熱的な恋始まる','熱が冷める',
+  '新事業・転職好機','計画失敗・遅延',
+  '投資チャンス','損失リスク',
+  '活力アップ','倦怠感',
+  '今がチャンス。動き出すとき。'),
+C('ワンドの2','Two of Wands',2,'wands','🔥',['計画','決断','視野','可能性'],
+  '大きな決断・未来計画・可能性を見据える。',
+  '迷い・計画通りいかない・優柔不断。',
+  '進展の決断','迷い',
+  '拡大計画・決断','計画頓挫',
+  '投資判断','迷いから損',
+  '前向き','迷いで疲れ',
+  '選択肢を整理して決断を。'),
+C('ワンドの3','Three of Wands',3,'wands','🔥',['展望','待機','拡大','遠望'],
+  '計画の進行・新天地を見据える・期待。',
+  '遅延・視野狭窄・期待外れ。',
+  '遠距離から進展','すれ違い',
+  '海外事業・拡大','遅れ',
+  '海外投資','失敗',
+  '見通し良好','疲労蓄積',
+  '少し離れて全体を見よう。'),
+C('ワンドの4','Four of Wands',4,'wands','🔥',['祝福','家庭','安定','達成'],
+  '祝祭・結婚・達成・家庭の喜び。',
+  '家庭の不和・不安定・足元の危うさ。',
+  '結婚・婚約','家庭問題',
+  '達成・節目・安定','仕事の不和',
+  '安定','不安定',
+  '安定','疲れ',
+  '今の幸せを祝おう。'),
+C('ワンドの5','Five of Wands',5,'wands','🔥',['競争','衝突','混乱','切磋琢磨'],
+  '競争・口論・混乱・ライバルとの戦い。',
+  '和解・混乱の終わり・落ち着く。',
+  '三角関係・口論','和解',
+  '競合多い・内輪揉め','解決',
+  '取り合い','解決',
+  'ストレス','回復',
+  '正面からぶつかるより一旦引く。'),
+C('ワンドの6','Six of Wands',6,'wands','🔥',['勝利','栄光','評価','賞賛'],
+  '勝利・賞賛・目標達成・公の栄光。',
+  '負け・評価されない・自慢の失敗。',
+  '告白成功・両思い','振られる',
+  '昇進・表彰','評価されない',
+  '大成功','失敗',
+  '良好','過信',
+  '勝利の瞬間。素直に喜んで。'),
+C('ワンドの7','Seven of Wands',7,'wands','🔥',['防御','奮闘','優位','信念'],
+  '立場を守る・奮闘・優位を守り抜く。',
+  '圧倒される・譲歩・諦め。',
+  '障害を乗り越える','諦める',
+  '競争で勝つ','圧倒される',
+  '守り抜く','失う',
+  '気力で踏ん張る','疲労蓄積',
+  '信念があれば戦える。'),
+C('ワンドの8','Eight of Wands',8,'wands','🔥',['スピード','進展','急展開','メッセージ'],
+  '急速な進展・メッセージ・行動・直球。',
+  '遅延・停滞・すれ違い・伝達ミス。',
+  '急展開・連絡','連絡途絶',
+  '急進展・スピーディ','遅れ',
+  '急な収入','遅延',
+  '回復早い','慢性化',
+  '今は速く動くとき。'),
+C('ワンドの9','Nine of Wands',9,'wands','🔥',['警戒','忍耐','踏ん張り','最後'],
+  'あと一歩・警戒・最後の踏ん張り。',
+  '諦め・疲弊・防衛過剰・もう少しで折れる。',
+  '試練を乗り越える','諦める',
+  '最後の踏ん張り','疲弊',
+  'あと少しで完成','疲労で投げ出す',
+  '消耗気味','疲弊',
+  'あと一息。ここで負けないで。'),
+C('ワンドの10','Ten of Wands',10,'wands','🔥',['重荷','責任','達成寸前','負担'],
+  '重い責任・達成寸前・限界近くの負荷。',
+  '解放・手放す・負担減・整理。',
+  '関係に疲れる','解放',
+  '業務過多','軽減',
+  '負担','整理',
+  'ストレス過剰','回復',
+  '抱えすぎ。手放してOK。'),
+C('ワンドのペイジ','Page of Wands',11,'wands','🔥',['探求','メッセンジャー','好奇心','若さ'],
+  '新しい知らせ・探求心・若々しい情熱。',
+  '落ち着きなさ・悪い知らせ・幼稚さ。',
+  '新しい出会い','軽い気持ち',
+  '新プロジェクト','飽きる',
+  '小さな儲け','衝動買い',
+  '元気','落ち着きない',
+  '好奇心のままに。学びがある。'),
+C('ワンドのナイト','Knight of Wands',12,'wands','🔥',['情熱的行動','冒険','突進','直球'],
+  '情熱的・行動的・冒険心・恐れない。',
+  '衝動的・無謀・計画不足・短気。',
+  '情熱的アプローチ','移り気',
+  '大胆な行動','軽率',
+  '大胆投資','損失',
+  'バイタリティ','疲労',
+  '勢いに乗って動こう。'),
+C('ワンドのクイーン','Queen of Wands',13,'wands','🔥',['自信','魅力','社交','活力'],
+  '自信・リーダーシップ・社交性・魅力。',
+  '嫉妬・自信過剰・独占欲・気分屋。',
+  '魅力的・リード','嫉妬深い',
+  'チームを率いる','ワンマン',
+  '賢い投資','見栄',
+  '元気','ストレス',
+  '自分の魅力を信じて。'),
+C('ワンドのキング','King of Wands',14,'wands','🔥',['ビジョン','リーダー','実行力','大志'],
+  '大きな目標・リーダー・実行力・先見の明。',
+  '独裁・衝動的・計画不足・暴君。',
+  '頼れるパートナー','独善的',
+  '経営者・ビジョン','暴君',
+  '大成功','大損',
+  '活力みなぎる','過労',
+  'ビジョンを掲げて先導を。'),
+
+// === Cups (水・感情・愛) ===
+C('カップのエース','Ace of Cups',1,'cups','💧',['愛','感情','溢れ','霊性'],
+  '新しい愛・感情の溢れ・満たされる・霊的な目覚め。',
+  '感情の枯渇・別れ・感情を抑える。',
+  '新しい恋・愛が満ちる','別れ・距離',
+  '創造性・人間関係好調','不調',
+  '喜びへの出費','出費過多',
+  '心の健康','感情的な不調',
+  '心を開いて受け取って。'),
+C('カップの2','Two of Cups',2,'cups','💧',['結合','相互愛','調和','パートナー'],
+  '結ばれる・相互理解・パートナーシップ・誓い。',
+  '不調和・別れ・不一致・誤解。',
+  '両思い・結婚','すれ違い',
+  '良いパートナー','不和',
+  '共同で得る','揉め事',
+  '調和','心の不調和',
+  '対等な関係を大切に。'),
+C('カップの3','Three of Cups',3,'cups','💧',['祝祭','友情','喜び','分かち合い'],
+  '友情・祝祭・喜びの分かち合い・パーティ。',
+  '不和・孤立・過剰・三角関係。',
+  '友達からの恋','グループの揉め事',
+  'チームの成功','派閥',
+  '楽しい出費','散財',
+  '元気','飲み過ぎ',
+  '仲間と祝おう。喜びは増える。'),
+C('カップの4','Four of Cups',4,'cups','💧',['退屈','無関心','再考','内省'],
+  '退屈・無気力・見落とし・内省のとき。',
+  '新しい刺激・目覚め・前向き。',
+  'マンネリ・無関心','関心が戻る',
+  'モチベ低下','新提案',
+  '投資意欲低下','復活',
+  '無気力','活気戻る',
+  '差し出されたものを見逃さないで。'),
+C('カップの5','Five of Cups',5,'cups','💧',['失望','後悔','悲しみ','喪失'],
+  '後悔・失望・悲しみ・過去の喪失。',
+  '立ち直り・希望・許し・前進。',
+  '失恋・後悔','立ち直り',
+  '失敗の後悔','教訓に',
+  '損失','取り戻す',
+  '心の傷','癒し',
+  '残ったものを見つめて。'),
+C('カップの6','Six of Cups',6,'cups','💧',['思い出','無垢','再会','過去'],
+  '懐かしい思い出・再会・無垢な愛・童心。',
+  '過去への執着・現実逃避・幼さ。',
+  '復縁・初恋','過去にとらわれる',
+  '古い縁が生きる','過去にすがる',
+  '過去の投資が実る','過去の失敗を引きずる',
+  '癒し','古い疾患',
+  '過去から学んで今を生きる。'),
+C('カップの7','Seven of Cups',7,'cups','💧',['幻想','選択','夢','妄想'],
+  '多くの選択肢・幻想・夢想・選び迷い。',
+  '現実直視・選択の決断・幻想が消える。',
+  '多くの選択','現実視',
+  '多くの可能性','一つに絞る',
+  '投資先の幻想','現実的判断',
+  '夢見がち','落ち着く',
+  '夢から現実を選ぶとき。'),
+C('カップの8','Eight of Cups',8,'cups','💧',['旅立ち','離脱','深い探求','見切り'],
+  '諦めて旅立つ・より深いものを求める・卒業。',
+  '戻る・留まる・諦めきれない。',
+  '別れて新しい道','戻る',
+  '退職・転換','留まる',
+  '損切りして移る','戻す',
+  '心の整理','迷い',
+  '次の段階へ進むとき。'),
+C('カップの9','Nine of Cups',9,'cups','💧',['願望成就','満足','贅沢','幸福'],
+  '願いが叶う・満足・自己肯定・幸福感。',
+  '物質的満足の限界・虚しさ・自己満足。',
+  '望みが叶う','満たされない',
+  '達成・満足','物足りない',
+  '余裕・贅沢','浪費',
+  '元気','贅沢病',
+  '願いをハッキリ思い描いて。'),
+C('カップの10','Ten of Cups',10,'cups','💧',['家庭円満','幸福','絆','調和'],
+  '家庭の幸せ・永続的な愛・調和・虹のような幸福。',
+  '家庭不和・価値観の違い・表面的な幸せ。',
+  '結婚・幸せな家庭','家庭問題',
+  '良いチーム・調和','不和',
+  '家族の繁栄','家計問題',
+  '心穏やか','家庭ストレス',
+  '感謝を口に出して。'),
+C('カップのペイジ','Page of Cups',11,'cups','💧',['感受性','メッセージ','創造','ロマン'],
+  '心からの提案・創造性・ロマンチックな知らせ。',
+  '感情的・未熟・現実逃避・気まぐれ。',
+  '純粋な好意','未熟な感情',
+  'クリエイティブ','集中力欠如',
+  '感情的な出費','衝動買い',
+  '繊細','メンタル不調',
+  '直感のメッセージに耳を。'),
+C('カップのナイト','Knight of Cups',12,'cups','💧',['ロマン','提案','夢追い','理想主義'],
+  'ロマンチックな提案・誘い・夢を追う騎士。',
+  '不誠実・見せかけ・夢想癖・現実逃避。',
+  'プロポーズ・ロマンス','嘘',
+  '創造的提案','計画倒れ',
+  '良い話','詐欺注意',
+  '心穏やか','感傷的',
+  '誘いを受けるか直感で。'),
+C('カップのクイーン','Queen of Cups',13,'cups','💧',['共感','愛情','直感','母性'],
+  '深い愛情・共感・母性・直感的な癒し。',
+  '感情的・依存・被害者意識・情緒不安定。',
+  '包容力ある愛','依存',
+  'ケア・共感的','感情に流される',
+  '慈善','感情的浪費',
+  '直感冴える','メンタル不安定',
+  '人の痛みを感じる才能を活かして。'),
+C('カップのキング','King of Cups',14,'cups','💧',['感情の支配','寛容','知恵','落ち着き'],
+  '感情のコントロール・寛容・知恵・落ち着いた愛。',
+  '感情的爆発・操作的・冷淡。',
+  '包容力','感情を操る',
+  '信頼ある立場','感情的判断',
+  '安定','感情的損失',
+  '心穏やか','内に秘めた怒り',
+  '冷静さこそが力。'),
+
+// === Swords (風・思考・葛藤) ===
+C('ソードのエース','Ace of Swords',1,'swords','🌀',['真実','明晰','勝利','決断'],
+  '真実が明らかに・明晰な思考・決断・勝利。',
+  '混乱・誤解・不正・真実の歪み。',
+  '本心がわかる','誤解',
+  '明晰な判断・勝訴','混乱',
+  '賢明な判断','詐欺',
+  '頭スッキリ','頭痛',
+  '迷いを断つとき。'),
+C('ソードの2','Two of Swords',2,'swords','🌀',['葛藤','決断回避','均衡','板挟み'],
+  '決められない・葛藤・選択回避・現実逃避。',
+  '決断する・行き詰まり打開・真実直視。',
+  '三角関係で迷う','決断する',
+  '板挟み','決断',
+  '投資先迷う','決める',
+  '神経過敏','スッキリ',
+  '目隠しを外して見るとき。'),
+C('ソードの3','Three of Swords',3,'swords','🌀',['心痛','別離','悲しみ','裏切り'],
+  '失恋・悲しみ・心の傷・裏切り。',
+  '立ち直り・許し・癒え始め。',
+  '別れ・裏切り','癒える',
+  '不和・解雇','修復',
+  '損失・痛い出費','回復',
+  '心の傷・うつ','回復',
+  '泣くだけ泣いて。それから前へ。'),
+C('ソードの4','Four of Swords',4,'swords','🌀',['休息','回復','瞑想','静寂'],
+  '休息・回復・内省・一時停止。',
+  '行動再開・燃え尽き・休めない。',
+  '関係の休止','再開',
+  '休職・休養','復帰',
+  '一時停止','動き出す',
+  '静養','過労',
+  '今は休むことが仕事。'),
+C('ソードの5','Five of Swords',5,'swords','🌀',['敗北','卑怯','勝ちの代償','揉め事'],
+  '勝つが失う・卑怯・敗北・揉め事。',
+  '和解・退却の知恵・許し。',
+  '揉め事・価値ない勝ち','和解',
+  '競争で疲弊','引く知恵',
+  '損して勝つ','退く',
+  '心荒む','落ち着く',
+  '勝つことだけが正解じゃない。'),
+C('ソードの6','Six of Swords',6,'swords','🌀',['移行','旅立ち','平穏','回復'],
+  '困難から脱出・移行・平穏な航海。',
+  '進めない・過去に戻る・滞り。',
+  '関係改善へ','戻れない',
+  '転職・移動成功','進めない',
+  '整理','滞り',
+  '回復','停滞',
+  '静かに前へ進もう。'),
+C('ソードの7','Seven of Swords',7,'swords','🌀',['策略','こっそり','欺き','戦略'],
+  '策略・隠し事・こっそり持ち去る・戦略的退却。',
+  '真実発覚・誠実・告白。',
+  '浮気・隠し事','発覚',
+  '不正・ずるい手','暴かれる',
+  '詐欺・誤魔化し','露見',
+  '隠し事のストレス','解放',
+  '正直になるか戦略で乗り切るか。'),
+C('ソードの8','Eight of Swords',8,'swords','🌀',['束縛','無力感','視野狭窄','自縛'],
+  '行き詰まり・無力・自縛・身動きとれない。',
+  '解放・自由を取り戻す・突破。',
+  '縛られた感覚','解放',
+  '八方塞がり','解決',
+  '借金で動けない','整理',
+  '不安神経','解放',
+  '自分が縛っているだけかも。'),
+C('ソードの9','Nine of Swords',9,'swords','🌀',['不安','悪夢','心配','不眠'],
+  '不安・心配・不眠・取り越し苦労。',
+  '不安からの解放・希望・朝が来る。',
+  '心配・嫉妬','安心',
+  'ストレス','解消',
+  '心配・不安','解決',
+  '不眠・うつ','回復',
+  '不安は実体より大きく見える。'),
+C('ソードの10','Ten of Swords',10,'swords','🌀',['終焉','敗北','底','ドン底'],
+  '完全な敗北・終焉・最悪・どん底。',
+  '底からの再生・回復・夜明け。',
+  '完全な別れ','立ち直り',
+  '最悪の終わり・解雇','再起',
+  '大損','立て直し',
+  '体調どん底','回復に向かう',
+  'これ以上落ちない。次は上がるだけ。'),
+C('ソードのペイジ','Page of Swords',11,'swords','🌀',['警戒','好奇心','メッセンジャー','情報'],
+  '知的好奇心・情報収集・警戒・観察。',
+  'スパイ・悪い情報・未熟・噂。',
+  '駆け引き','トラブル',
+  '学び・観察','噂・トラブル',
+  '情報収集','悪い情報',
+  '神経質','睡眠不足',
+  '情報を集めてから動く。'),
+C('ソードのナイト','Knight of Swords',12,'swords','🌀',['突進','論争','迅速','行動力'],
+  '迅速な行動・議論・突進・直球。',
+  '衝動・無謀・暴言・短気。',
+  '直球アプローチ','衝突',
+  '急進的','失言',
+  '大胆判断','損失',
+  '高い活力','過激',
+  'スピード優先で動こう。'),
+C('ソードのクイーン','Queen of Swords',13,'swords','🌀',['知性','独立','率直','明晰'],
+  '知的・明晰・独立・率直・公平。',
+  '冷酷・辛辣・孤独・偏見。',
+  '知的な魅力','冷たい',
+  '公平な判断','厳しすぎる',
+  '賢い管理','ケチ',
+  '頭明晰','神経張り詰め',
+  '感情を交えず本質を見る。'),
+C('ソードのキング','King of Swords',14,'swords','🌀',['知性','権威','論理','公正'],
+  '論理的判断・リーダー・公正・知的権威。',
+  '独裁・辛辣・不公平・冷淡。',
+  '知的なパートナー','冷たい',
+  '経営判断・法律家','独裁',
+  '賢い判断','過度な節約',
+  '頭脳明晰','頭痛',
+  '事実と論理で決める。'),
+
+// === Pentacles (土・物質・お金) ===
+C('ペンタクルのエース','Ace of Pentacles',1,'pents','🌳',['新収入','好機','繁栄の種','物質'],
+  '新しい収入源・好機・安定の始まり・繁栄。',
+  '機会逃す・不安定・損失・物欲過剰。',
+  '安定した恋始まる','不安定',
+  '新しい仕事・好機','機会逃す',
+  '大きな収入','損失',
+  '健康','体調不良',
+  '足元のチャンスを逃さないで。'),
+C('ペンタクルの2','Two of Pentacles',2,'pents','🌳',['両立','変化','柔軟','やりくり'],
+  '両立・バランス・柔軟性・上手なやりくり。',
+  '不調和・優先順位混乱・破綻。',
+  '複数の関心','バランス崩れる',
+  '副業・複数業務','過剰負担',
+  'やりくり','不安定',
+  '元気','疲労',
+  '優先順位を明確に。'),
+C('ペンタクルの3','Three of Pentacles',3,'pents','🌳',['協力','技能','評価','チーム'],
+  'チームワーク・技能発揮・評価・建設。',
+  '不和・未熟・評価されない。',
+  '協力的な関係','不和',
+  'チームの成功','不協和音',
+  '共同で得る','揉める',
+  '良好','過労',
+  'みんなで作るのが力。'),
+C('ペンタクルの4','Four of Pentacles',4,'pents','🌳',['蓄積','保守','所有','執着'],
+  '安定・貯蓄・所有・守りの姿勢。',
+  'ケチ・執着・損失・抱え込み。',
+  '安定・独占欲','束縛',
+  '安定した立場','保守的すぎ',
+  '貯蓄','ケチ',
+  '安定','緊張で不調',
+  '守りすぎず流すことも大事。'),
+C('ペンタクルの5','Five of Pentacles',5,'pents','🌳',['困窮','孤独','苦難','貧窮'],
+  '困窮・苦難・孤立・経済的精神的貧しさ。',
+  '苦境脱出・回復・救いの手。',
+  '心の貧困・孤独','救いの手',
+  '失職・困難','復帰',
+  '損失・貧窮','回復',
+  '体調不良','回復',
+  '助けを求めていい。'),
+C('ペンタクルの6','Six of Pentacles',6,'pents','🌳',['寛大','与える','共有','援助'],
+  '援助・寛大・与える/受け取るバランス。',
+  '不平等・見返り要求・施しと受け取りの偏り。',
+  '与え合う','不均衡',
+  '援助・ボーナス','不公平',
+  '寄付・援助','借金',
+  '適度な施しが心を癒す','負担感',
+  '与えることで巡る。'),
+C('ペンタクルの7','Seven of Pentacles',7,'pents','🌳',['評価','忍耐','長期投資','見直し'],
+  '努力の評価・長期視点・収穫前の点検。',
+  '努力が報われない・焦り・損切り迷い。',
+  '関係の見直し','不安',
+  '努力が実る','報われない',
+  '長期投資成果','損切り迷い',
+  '健康','疲労蓄積',
+  '焦らず時間を味方に。'),
+C('ペンタクルの8','Eight of Pentacles',8,'pents','🌳',['努力','技能習得','職人','コツコツ'],
+  '努力・習得・コツコツ・専門性。',
+  '飽きる・雑・未熟・手抜き。',
+  '関係を育てる','怠ける',
+  'スキルアップ','雑な仕事',
+  '着実に増える','雑な投資',
+  '健康','過労',
+  '繰り返しが達人を作る。'),
+C('ペンタクルの9','Nine of Pentacles',9,'pents','🌳',['成功','自立','贅沢','洗練'],
+  '経済的成功・自立・ご褒美・洗練された豊かさ。',
+  '不満・見せかけの豊かさ・依存。',
+  '自立した関係','物質依存',
+  '独立成功','不安定',
+  '経済的余裕','表面だけの豊かさ',
+  '健康','贅沢病',
+  '自分で稼ぐ喜びを味わって。'),
+C('ペンタクルの10','Ten of Pentacles',10,'pents','🌳',['家族','遺産','長期繁栄','財産'],
+  '家族の繁栄・安定・相続・代々続く豊かさ。',
+  '家族問題・相続争い・継続性の危機。',
+  '結婚・家族の祝福','反対',
+  '大企業・安定','不安定',
+  '大きな安定・相続','相続トラブル',
+  '健康','遺伝的な不調',
+  '家族・伝統が支えに。'),
+C('ペンタクルのペイジ','Page of Pentacles',11,'pents','🌳',['学び','好奇心','新企画','誠実'],
+  '学び・新しい仕事・誠実・地道な始まり。',
+  '怠ける・未熟・機会逃す・物質執着。',
+  '真面目な恋','進展なし',
+  '学び・研修','怠慢',
+  '学習投資','機会逃す',
+  '健康','運動不足',
+  '勉強と練習が実を結ぶ。'),
+C('ペンタクルのナイト','Knight of Pentacles',12,'pents','🌳',['着実','忍耐','信頼','実直'],
+  '着実・責任感・信頼・じっくり進む。',
+  '退屈・頑固・停滞・保守的すぎ。',
+  '真面目・安定','退屈',
+  '信頼・コツコツ','進歩なし',
+  '堅実','保守的すぎ',
+  '健康','運動不足',
+  '地味でも継続が信用を作る。'),
+C('ペンタクルのクイーン','Queen of Pentacles',13,'pents','🌳',['豊かさ','ケア','実用','母性'],
+  '豊かさ・世話好き・実用的・現実的な愛情。',
+  '物質依存・嫉妬・疲弊・忙しすぎ。',
+  '包容力','物質依存',
+  '実務的・ケア','過労',
+  '賢い管理','浪費',
+  'バランス','過労',
+  '現実的なケアが最強の愛。'),
+C('ペンタクルのキング','King of Pentacles',14,'pents','🌳',['安定','富','寛大なリーダー','成功'],
+  '経済的成功・安定・寛大・現実主義のリーダー。',
+  '物欲・ケチ・独占・退屈な保守。',
+  '頼れる・贅沢','物質的',
+  '経営者・富','強欲',
+  '大きな富','浪費',
+  '健康','贅沢病',
+  '実利と寛大さを両立せよ。'),
+];
+
+// ───────── render ─────────
+const grid = document.getElementById('grid');
+const search = document.getElementById('search');
+const filters = document.getElementById('filters');
+let curFilter = 'all';
+let curQuery = '';
+let curMode = 'browse'; // browse / draw1 / draw3
+
+function matches(card) {
+    if (curFilter !== 'all' && card.st !== curFilter) return false;
+    if (!curQuery) return true;
+    const q = curQuery.toLowerCase();
+    return card.n.includes(curQuery)
+        || card.en.toLowerCase().includes(q)
+        || card.kw.some(k => k.includes(curQuery));
+}
+
+function renderGrid() {
+    grid.innerHTML = '';
+    document.body.classList.remove('spread-mode');
+    document.getElementById('spread-area').innerHTML = '';
+    const list = CARDS.filter(matches);
+    if (list.length === 0) {
+        grid.innerHTML = '<div class="empty-msg">該当するカードが見つかりません</div>';
+        return;
+    }
+    list.forEach(c => {
+        const el = document.createElement('div');
+        el.className = 'card';
+        el.dataset.st = c.st;
+        el.innerHTML = `
+            <div class="no">${c.st === 'major' ? c.no : ''}</div>
+            <div class="em">${c.em}</div>
+            <div class="nm">${c.n}</div>`;
+        el.addEventListener('click', () => openModal(c, false));
+        grid.appendChild(el);
+    });
+}
+
+// ───────── filter & search ─────────
+filters.addEventListener('click', (e) => {
+    const t = e.target.closest('.filt');
+    if (!t) return;
+    document.querySelectorAll('.filt').forEach(x => x.classList.toggle('active', x === t));
+    curFilter = t.dataset.f;
+    renderGrid();
+});
+search.addEventListener('input', () => {
+    curQuery = search.value.trim();
+    renderGrid();
+});
+
+// ───────── modal ─────────
+const modal = document.getElementById('modal');
+function setTabState(tab) {
+    const up = document.getElementById('d-up');
+    const rev = document.getElementById('d-rev');
+    document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.dataset.tab === tab));
+    if (tab === 'up') { up.style.display = ''; rev.style.display = 'none'; }
+    else if (tab === 'rev') { up.style.display = 'none'; rev.style.display = ''; }
+    else { up.style.display = ''; rev.style.display = ''; }
+}
+function openModal(c, reversed) {
+    document.getElementById('d-card').dataset.st = c.st;
+    document.getElementById('d-card').classList.toggle('reversed', !!reversed);
+    document.getElementById('d-no').textContent = c.st === 'major' ? c.no : '';
+    document.getElementById('d-em').textContent = c.em;
+    document.getElementById('d-nm').textContent = c.n;
+    document.getElementById('d-en').textContent = c.en;
+    const kw = document.getElementById('d-kw');
+    kw.innerHTML = '';
+    c.kw.forEach(k => {
+        const s = document.createElement('span');
+        s.className = 'kw';
+        s.textContent = k;
+        kw.appendChild(s);
+    });
+    document.getElementById('d-u').textContent = c.u;
+    document.getElementById('d-lu').textContent = c.lu;
+    document.getElementById('d-wu').textContent = c.wu;
+    document.getElementById('d-mu').textContent = c.mu;
+    document.getElementById('d-hu').textContent = c.hu;
+    document.getElementById('d-r').textContent = c.r;
+    document.getElementById('d-lr').textContent = c.lr;
+    document.getElementById('d-wr').textContent = c.wr;
+    document.getElementById('d-mr').textContent = c.mr;
+    document.getElementById('d-hr').textContent = c.hr;
+    document.getElementById('d-ad').textContent = c.ad;
+
+    setTabState(reversed ? 'rev' : 'both');
+    modal.classList.add('show');
+    document.getElementById('modal-inner').scrollTop = 0;
+}
+document.getElementById('close').addEventListener('click', () => modal.classList.remove('show'));
+modal.addEventListener('click', (e) => { if (e.target === modal) modal.classList.remove('show'); });
+document.querySelectorAll('.tab').forEach(t => t.addEventListener('click', () => setTabState(t.dataset.tab)));
+
+// ───────── draws ─────────
+function drawCard() {
+    const c = CARDS[Math.floor(Math.random() * CARDS.length)];
+    const reversed = Math.random() < 0.5;
+    return { c, reversed };
+}
+
+function showDraw(draws) {
+    document.body.classList.add('spread-mode');
+    const area = document.getElementById('spread-area');
+    area.innerHTML = '';
+    draws.forEach((d, i) => {
+        const slot = document.createElement('div');
+        slot.className = 'draw-slot';
+        const label = draws.length === 3 ? ['過去', '現在', '未来'][i] : '今日のカード';
+        slot.innerHTML = `<div class="pos-label">${label}</div>`;
+        const card = document.createElement('div');
+        card.className = 'draw-card' + (d.reversed ? ' reversed' : '');
+        card.dataset.st = d.c.st;
+        card.innerHTML = `
+            ${d.reversed ? '<div class="rev-tag">逆位置</div>' : ''}
+            <div class="no">${d.c.st === 'major' ? d.c.no : ''}</div>
+            <div class="em">${d.c.em}</div>
+            <div class="nm-jp">${d.c.n}</div>
+            <div class="nm-en">${d.c.en}</div>`;
+        card.addEventListener('click', () => openModal(d.c, d.reversed));
+        slot.appendChild(card);
+        area.appendChild(slot);
+    });
+    grid.innerHTML = '';
+}
+
+document.getElementById('draw1').addEventListener('click', () => {
+    showDraw([drawCard()]);
+});
+document.getElementById('draw3').addEventListener('click', () => {
+    const drawn = new Set();
+    const draws = [];
+    while (draws.length < 3) {
+        const d = drawCard();
+        if (drawn.has(d.c.n)) continue;
+        drawn.add(d.c.n);
+        draws.push(d);
+    }
+    showDraw(draws);
+});
+document.getElementById('show-all').addEventListener('click', () => {
+    document.body.classList.remove('spread-mode');
+    document.getElementById('spread-area').innerHTML = '';
+    renderGrid();
+});
+
+// initial
+renderGrid();
+</script>
+</body>
+</html>
