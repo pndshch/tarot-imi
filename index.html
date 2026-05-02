@@ -15,57 +15,143 @@ body { background: radial-gradient(ellipse at top, #1e1b4b 0%, #0f0a1f 60%, #000
 .lang-btn.active { background: #fbbf24; color: #1e1b4b; }
 .topbar { display: flex; justify-content: space-between; color: #a78bfa; font-size: 12px; margin-bottom: 12px; }
 .topbar a { color: #a78bfa; text-decoration: none; font-family: system-ui, sans-serif; }
-.brand { text-align: center; margin-bottom: 18px; }
+.brand { text-align: center; margin-bottom: 16px; }
 .brand-title { font-size: 32px; font-weight: 700; background: linear-gradient(135deg, #fbbf24, #f59e0b, #fbbf24); -webkit-background-clip: text; background-clip: text; color: transparent; letter-spacing: 4px; }
 .brand-sub { color: #a78bfa; font-size: 12px; margin-top: 6px; letter-spacing: 2px; }
+
 .controls { background: rgba(30,27,75,0.6); border: 1px solid rgba(167,139,250,0.3); border-radius: 12px; padding: 12px; margin-bottom: 12px; backdrop-filter: blur(10px); }
 .search-row { display: flex; gap: 8px; margin-bottom: 10px; }
 input[type="text"] { flex: 1; padding: 12px 14px; background: rgba(0,0,0,0.4); border: 1px solid rgba(167,139,250,0.4); color: #fff; border-radius: 8px; font-size: 15px; font-family: inherit; outline: none; }
 input[type="text"]:focus { border-color: #fbbf24; }
-.actions-row { display: flex; gap: 6px; flex-wrap: wrap; }
-.act { flex: 1; min-width: 80px; padding: 10px 8px; background: rgba(167,139,250,0.15); border: 1px solid rgba(167,139,250,0.4); color: #e6e3f0; border-radius: 8px; font-family: 'Hiragino Maru Gothic ProN', sans-serif; font-size: 13px; font-weight: 700; cursor: pointer; }
-.act.gold { background: linear-gradient(135deg, rgba(251,191,36,0.25), rgba(245,158,11,0.25)); border-color: rgba(251,191,36,0.6); color: #fbbf24; }
+
+.spread-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; }
+@media (min-width: 600px) { .spread-grid { grid-template-columns: repeat(4, 1fr); } }
+.sp-btn { padding: 10px 6px; background: rgba(167,139,250,0.15); border: 1px solid rgba(167,139,250,0.4); color: #e6e3f0; border-radius: 8px; font-family: 'Hiragino Maru Gothic ProN', sans-serif; font-size: 12px; font-weight: 700; cursor: pointer; line-height: 1.4; transition: background 0.15s, border-color 0.15s; }
+.sp-btn:hover { background: rgba(167,139,250,0.3); }
+.sp-btn.active { background: linear-gradient(135deg, rgba(251,191,36,0.3), rgba(245,158,11,0.2)); border-color: rgba(251,191,36,0.7); color: #fbbf24; }
+.sp-btn small { display: block; font-size: 10px; opacity: 0.7; margin-top: 2px; font-weight: 400; font-family: system-ui, sans-serif; }
+.sp-btn.gray { background: rgba(75,85,99,0.3); border-color: #4b5563; color: #9ca3af; }
+
 .filters { display: flex; gap: 4px; margin-bottom: 12px; overflow-x: auto; padding-bottom: 4px; scrollbar-width: none; }
 .filters::-webkit-scrollbar { display: none; }
 .filt { flex-shrink: 0; padding: 6px 12px; background: rgba(30,27,75,0.6); border: 1px solid rgba(167,139,250,0.3); border-radius: 16px; color: #a78bfa; font-size: 12px; font-family: system-ui, sans-serif; cursor: pointer; white-space: nowrap; }
 .filt.active { background: rgba(251,191,36,0.2); border-color: #fbbf24; color: #fbbf24; }
-.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(96px, 1fr)); gap: 6px; }
-.card { aspect-ratio: 2 / 3; background: linear-gradient(160deg, var(--c1, #312e81), var(--c2, #1e1b4b)); border: 1px solid rgba(251,191,36,0.4); border-radius: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 6px 4px; cursor: pointer; position: relative; transition: transform 0.15s, border-color 0.15s, box-shadow 0.15s; overflow: hidden; text-align: center; }
-.card:hover { transform: translateY(-3px); border-color: #fbbf24; box-shadow: 0 6px 20px rgba(251,191,36,0.3); }
-.card .em { font-size: 32px; margin-bottom: 2px; line-height: 1; }
-.card .nm { font-size: 11px; font-weight: 700; line-height: 1.2; color: #fff; text-shadow: 0 1px 2px rgba(0,0,0,0.7); }
-.card .no { position: absolute; top: 4px; left: 4px; color: rgba(251,191,36,0.7); font-size: 9px; font-weight: 700; }
+
+/* Card visuals - shared */
+.tcard { aspect-ratio: 2 / 3; border-radius: 8px; border: 1px solid rgba(251,191,36,0.4); position: relative; overflow: hidden; cursor: pointer; transition: transform 0.15s, border-color 0.15s, box-shadow 0.15s; background: linear-gradient(160deg, var(--c1, #312e81), var(--c2, #1e1b4b)); }
+.tcard:hover { transform: translateY(-3px); border-color: #fbbf24; box-shadow: 0 6px 20px rgba(251,191,36,0.3); }
+.tcard.reversed { transform: rotate(180deg); }
+.tcard.reversed:hover { transform: rotate(180deg) translateY(-3px); }
+.tcard .art { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; background: #fff; }
+.tcard .fallback { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 6px; text-align: center; }
+.tcard.no-image .art { display: none; }
+.tcard:not(.no-image) .fallback { display: none; }
+.tcard .em { font-size: 32px; line-height: 1; }
+.tcard .nm { font-size: 11px; font-weight: 700; line-height: 1.2; color: #fff; text-shadow: 0 1px 2px rgba(0,0,0,0.7); margin-top: 4px; }
+.tcard .no-badge { position: absolute; top: 4px; left: 4px; color: rgba(251,191,36,0.9); font-size: 9px; font-weight: 700; background: rgba(0,0,0,0.5); padding: 1px 4px; border-radius: 4px; z-index: 2; font-family: system-ui, sans-serif; }
+.tcard .rev-tag { position: absolute; top: 4px; right: 4px; background: rgba(248,113,113,0.9); color: #fff; font-size: 9px; padding: 2px 5px; border-radius: 8px; font-family: system-ui, sans-serif; font-weight: 800; letter-spacing: 1px; z-index: 3; }
 [data-st="major"] { --c1: #4c1d95; --c2: #1e1b4b; }
 [data-st="wands"] { --c1: #7f1d1d; --c2: #431407; }
 [data-st="cups"] { --c1: #1e3a8a; --c2: #0c4a6e; }
 [data-st="swords"] { --c1: #374151; --c2: #111827; }
 [data-st="pents"] { --c1: #14532d; --c2: #052e16; }
-.spread-area { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin-bottom: 12px; }
-.draw-slot { width: 100%; max-width: 220px; text-align: center; }
-.draw-slot .pos-label { font-size: 11px; color: #fbbf24; margin-bottom: 4px; letter-spacing: 2px; font-family: system-ui, sans-serif; }
-.draw-card { aspect-ratio: 2 / 3; border-radius: 10px; border: 2px solid rgba(251,191,36,0.5); background: linear-gradient(160deg, var(--c1, #312e81), var(--c2, #1e1b4b)); display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 10px; cursor: pointer; text-align: center; position: relative; }
-.draw-card.reversed { transform: rotate(180deg); }
-.draw-card.reversed .nm-jp, .draw-card.reversed .em, .draw-card.reversed .no, .draw-card.reversed .rev-tag { transform: rotate(180deg); }
-.draw-card .em { font-size: 56px; margin-bottom: 4px; }
-.draw-card .nm-jp { font-size: 16px; font-weight: 800; color: #fff; }
-.draw-card .nm-en { font-size: 10px; color: rgba(255,255,255,0.7); margin-top: 2px; }
-.draw-card .rev-tag { position: absolute; top: 4px; right: 4px; background: #f87171; color: #fff; font-size: 9px; padding: 2px 6px; border-radius: 8px; font-family: system-ui, sans-serif; font-weight: 800; letter-spacing: 1px; }
+
+/* Browse grid */
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(96px, 1fr)); gap: 6px; }
+.grid .tcard { width: 100%; }
+
+/* Spread layouts */
+.spread-area { padding: 12px 0 24px; }
+.spread-name { text-align: center; color: #fbbf24; font-size: 14px; letter-spacing: 2px; margin-bottom: 10px; font-family: system-ui, sans-serif; font-weight: 700; }
+.yesno-banner { text-align: center; font-size: 28px; font-weight: 900; padding: 12px; margin: 0 auto 16px; max-width: 280px; border-radius: 12px; }
+.yesno-banner.yes { background: linear-gradient(135deg, rgba(52,211,153,0.3), rgba(34,197,94,0.2)); border: 2px solid rgba(52,211,153,0.6); color: #34d399; }
+.yesno-banner.no { background: linear-gradient(135deg, rgba(248,113,113,0.3), rgba(220,38,38,0.2)); border: 2px solid rgba(248,113,113,0.6); color: #f87171; }
+
+.slot { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.slot .pos-label { font-size: 10px; color: #fbbf24; letter-spacing: 1px; font-family: system-ui, sans-serif; font-weight: 700; text-align: center; max-width: 90px; line-height: 1.3; }
+.slot .tcard { width: var(--card-size, 100px); }
+
+/* Layout: single */
+.layout-single { display: flex; justify-content: center; }
+.layout-single .slot .tcard { width: 220px; }
+
+/* Layout: row */
+.layout-row { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; }
+.layout-row .slot .tcard { width: 130px; }
+
+/* Layout: cross (5 cards) */
+.layout-cross { display: grid; grid-template-columns: repeat(3, 110px); grid-template-rows: repeat(3, auto); gap: 8px; justify-content: center; }
+.layout-cross .slot { gap: 2px; }
+.layout-cross .slot .tcard { width: 100px; }
+.layout-cross .pos-1 { grid-column: 2; grid-row: 2; }
+.layout-cross .pos-2 { grid-column: 1; grid-row: 2; }
+.layout-cross .pos-3 { grid-column: 2; grid-row: 1; }
+.layout-cross .pos-4 { grid-column: 3; grid-row: 2; }
+.layout-cross .pos-5 { grid-column: 2; grid-row: 3; }
+
+/* Layout: horseshoe (7 cards) */
+.layout-horseshoe { display: grid; grid-template-columns: repeat(7, 1fr); grid-template-rows: repeat(4, auto); gap: 4px; max-width: 600px; margin: 0 auto; }
+.layout-horseshoe .slot { gap: 2px; }
+.layout-horseshoe .slot .tcard { width: 100%; max-width: 80px; }
+.layout-horseshoe .pos-1 { grid-column: 1; grid-row: 4; }
+.layout-horseshoe .pos-2 { grid-column: 2; grid-row: 3; }
+.layout-horseshoe .pos-3 { grid-column: 3; grid-row: 2; }
+.layout-horseshoe .pos-4 { grid-column: 4; grid-row: 1; }
+.layout-horseshoe .pos-5 { grid-column: 5; grid-row: 2; }
+.layout-horseshoe .pos-6 { grid-column: 6; grid-row: 3; }
+.layout-horseshoe .pos-7 { grid-column: 7; grid-row: 4; }
+
+/* Layout: celtic cross (10 cards) */
+.layout-celtic { display: grid; grid-template-columns: repeat(4, 1fr); grid-template-rows: repeat(4, auto); gap: 6px; max-width: 480px; margin: 0 auto; }
+.layout-celtic .slot { gap: 2px; }
+.layout-celtic .slot .tcard { width: 100%; max-width: 90px; }
+.layout-celtic .pos-1 { grid-column: 2; grid-row: 2; position: relative; z-index: 1; }
+.layout-celtic .pos-2 { grid-column: 2; grid-row: 2; position: relative; z-index: 2; pointer-events: none; }
+.layout-celtic .pos-2 .tcard { transform: rotate(90deg) translateX(8%); pointer-events: auto; opacity: 0.92; box-shadow: 0 4px 14px rgba(0,0,0,0.5); }
+.layout-celtic .pos-2.reversed .tcard { transform: rotate(-90deg) translateX(-8%); }
+.layout-celtic .pos-2 .pos-label { position: absolute; bottom: -16px; left: 50%; transform: translateX(-50%); }
+.layout-celtic .pos-3 { grid-column: 1; grid-row: 2; }
+.layout-celtic .pos-4 { grid-column: 2; grid-row: 3; }
+.layout-celtic .pos-5 { grid-column: 2; grid-row: 1; }
+.layout-celtic .pos-6 { grid-column: 3; grid-row: 2; }
+.layout-celtic .pos-7 { grid-column: 4; grid-row: 4; }
+.layout-celtic .pos-8 { grid-column: 4; grid-row: 3; }
+.layout-celtic .pos-9 { grid-column: 4; grid-row: 2; }
+.layout-celtic .pos-10 { grid-column: 4; grid-row: 1; }
+
+/* Layout: year (12 cards) */
+.layout-year { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; max-width: 480px; margin: 0 auto; }
+.layout-year .slot { gap: 2px; }
+.layout-year .slot .tcard { width: 100%; max-width: 100px; }
+
+@media (max-width: 480px) {
+    .layout-cross { grid-template-columns: repeat(3, 80px); }
+    .layout-cross .slot .tcard { width: 75px; }
+    .layout-horseshoe .slot .tcard { max-width: 50px; }
+    .layout-celtic { gap: 4px; }
+    .layout-celtic .slot .tcard { max-width: 64px; }
+    .layout-year { gap: 4px; }
+    .layout-year .slot .tcard { max-width: 70px; }
+}
+
 .spread-mode .grid { display: none; }
 .spread-mode .filters { display: none; }
 .spread-mode .search-row { display: none; }
+
+/* Modal */
 .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 100; display: none; align-items: flex-end; justify-content: center; backdrop-filter: blur(8px); }
 .modal.show { display: flex; animation: fadein 0.2s; }
 @keyframes fadein { from { opacity: 0; } to { opacity: 1; } }
 .modal-inner { background: linear-gradient(160deg, #1e1b4b, #0f0a1f); border: 1px solid rgba(251,191,36,0.4); border-radius: 20px 20px 0 0; width: 100%; max-width: 560px; max-height: 92vh; overflow-y: auto; padding: 18px 18px 32px; animation: slideup 0.3s cubic-bezier(.2,.7,.3,1); }
 @keyframes slideup { from { transform: translateY(100%); } to { transform: translateY(0); } }
 .modal-close { position: sticky; top: 0; margin-left: auto; margin-bottom: -32px; width: 36px; height: 36px; background: rgba(0,0,0,0.5); border: 1px solid rgba(167,139,250,0.4); color: #fff; border-radius: 50%; cursor: pointer; font-size: 18px; display: flex; align-items: center; justify-content: center; z-index: 10; }
-.detail-card { aspect-ratio: 2 / 3; max-width: 200px; margin: 0 auto 16px; border-radius: 12px; border: 2px solid rgba(251,191,36,0.5); background: linear-gradient(160deg, var(--c1, #312e81), var(--c2, #1e1b4b)); display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 12px; text-align: center; position: relative; }
+.detail-card { aspect-ratio: 2 / 3; max-width: 200px; margin: 0 auto 16px; }
 .detail-card.reversed { transform: rotate(180deg); }
-.detail-card.reversed > * { transform: rotate(180deg); }
-.detail-card .em { font-size: 60px; margin-bottom: 6px; }
-.detail-card .nm-jp { font-size: 18px; font-weight: 800; color: #fff; }
-.detail-card .nm-en { font-size: 11px; color: rgba(255,255,255,0.7); margin-top: 2px; font-style: italic; }
-.detail-card .nm-num { font-size: 10px; color: rgba(251,191,36,0.7); position: absolute; top: 6px; left: 8px; font-family: system-ui, sans-serif; font-weight: 700; }
+.detail-meta { text-align: center; margin-bottom: 14px; }
+.detail-meta .nm-jp { font-size: 20px; font-weight: 800; color: #fff; }
+.detail-meta .nm-en { font-size: 12px; color: rgba(255,255,255,0.7); margin-top: 2px; font-style: italic; font-family: system-ui, sans-serif; }
+.detail-meta .nm-num { font-size: 11px; color: #fbbf24; margin-top: 4px; font-family: system-ui, sans-serif; }
+
 .tabs { display: flex; gap: 4px; margin-bottom: 14px; background: rgba(0,0,0,0.4); padding: 4px; border-radius: 10px; }
 .tab { flex: 1; padding: 8px; text-align: center; color: #a78bfa; border-radius: 7px; cursor: pointer; font-family: system-ui, sans-serif; font-size: 12px; font-weight: 700; letter-spacing: 1px; }
 .tab.active.up { background: linear-gradient(135deg, rgba(251,191,36,0.25), rgba(245,158,11,0.15)); color: #fbbf24; }
@@ -112,10 +198,15 @@ input[type="text"]:focus { border-color: #fbbf24; }
     <div class="search-row">
         <input id="search" type="text" data-i18n-placeholder="searchPh" autocomplete="off" />
     </div>
-    <div class="actions-row">
-        <button class="act gold" id="draw1" data-i18n="draw1">🃏 1枚 引く</button>
-        <button class="act gold" id="draw3" data-i18n="draw3">🔮 3枚 (過去・現在・未来)</button>
-        <button class="act" id="show-all" data-i18n="showAll">📚 全カード一覧</button>
+    <div class="spread-grid">
+        <button class="sp-btn" data-sp="one"><span data-i18n="sp1Title">🃏 1枚</span><small data-i18n="sp1Sub">今日のカード</small></button>
+        <button class="sp-btn" data-sp="yesno"><span data-i18n="spYNTitle">⚖️ Yes/No</span><small data-i18n="spYNSub">答えを引く</small></button>
+        <button class="sp-btn" data-sp="three"><span data-i18n="sp3Title">🔮 3枚</span><small data-i18n="sp3Sub">過去・現在・未来</small></button>
+        <button class="sp-btn" data-sp="five"><span data-i18n="sp5Title">✨ 5枚十字</span><small data-i18n="sp5Sub">基本リーディング</small></button>
+        <button class="sp-btn" data-sp="horseshoe"><span data-i18n="sp7Title">🌅 7枚 ホースシュー</span><small data-i18n="sp7Sub">状況分析</small></button>
+        <button class="sp-btn" data-sp="celtic"><span data-i18n="sp10Title">⛪ ケルト十字</span><small data-i18n="sp10Sub">本格 10枚</small></button>
+        <button class="sp-btn" data-sp="year"><span data-i18n="sp12Title">📅 12ヶ月</span><small data-i18n="sp12Sub">年間運勢</small></button>
+        <button class="sp-btn gray" data-sp="all"><span data-i18n="spAllTitle">📚 全カード一覧</span></button>
     </div>
 </div>
 
@@ -134,15 +225,22 @@ input[type="text"]:focus { border-color: #fbbf24; }
 <div class="footer">
     <p><a href="https://pndshch.github.io/">© Pinda Lab</a> · <a href="https://www.buymeacoffee.com/pndshch" target="_blank">☕</a></p>
     <p style="margin-top:6px; font-size:10px; opacity:0.7" data-i18n="disclaimer">解釈は標準的なライダー版に基づく目安。読み手の直感が最後の答えです。</p>
+    <p style="margin-top:4px; font-size:9px; opacity:0.5" data-i18n="imageCredit">カード画像: Rider-Waite-Smith デッキ (1909、Pamela Colman Smith) パブリックドメイン / Wikipedia</p>
 </div>
 </div>
 
 <div class="modal" id="modal">
     <div class="modal-inner" id="modal-inner">
         <button class="modal-close" id="close">✕</button>
-        <div class="detail-card" id="d-card">
-            <div class="nm-num" id="d-no"></div>
-            <div class="em" id="d-em"></div>
+        <div class="detail-card tcard" id="d-card">
+            <span class="no-badge" id="d-no"></span>
+            <img class="art" id="d-art" />
+            <div class="fallback">
+                <div class="em" id="d-em"></div>
+                <div class="nm" id="d-nm-fb"></div>
+            </div>
+        </div>
+        <div class="detail-meta">
             <div class="nm-jp" id="d-nm"></div>
             <div class="nm-en" id="d-en"></div>
         </div>
@@ -196,28 +294,96 @@ function L(field) { return field && typeof field === 'object' && 'j' in field ? 
 
 const I18N_UI = {
     ja: { title: 'タロットの意味', back: '← Pinda Lab',
-          searchPh: '🔍 カード名・キーワードで検索 (例: 愛、塔、Lovers)',
-          draw1: '🃏 1枚 引く', draw3: '🔮 3枚 (過去・現在・未来)', showAll: '📚 全カード一覧',
+          searchPh: '🔍 カード名・キーワードで検索',
+          sp1Title: '🃏 1枚', sp1Sub: '今日のカード',
+          spYNTitle: '⚖️ Yes/No', spYNSub: '答えを引く',
+          sp3Title: '🔮 3枚', sp3Sub: '過去・現在・未来',
+          sp5Title: '✨ 5枚十字', sp5Sub: '基本リーディング',
+          sp7Title: '🌅 7枚 ホースシュー', sp7Sub: '状況分析',
+          sp10Title: '⛪ ケルト十字', sp10Sub: '本格 10枚',
+          sp12Title: '📅 12ヶ月', sp12Sub: '年間運勢',
+          spAllTitle: '📚 全カード一覧',
           filterAll: 'すべて', filterMajor: '大アルカナ', filterWands: '🔥 ワンド', filterCups: '💧 カップ', filterSwords: '🌀 ソード', filterPents: '🌳 ペンタクル',
           tabBoth: '両方表示', tabUp: '正位置', tabRev: '逆位置',
           catLove: '💕 恋愛', catWork: '💼 仕事', catMoney: '💰 金銭', catHealth: '🌿 健康',
           titleUp: '▲ 正位置 — 総合', titleRev: '▼ 逆位置 — 総合', titleAd: '✦ アドバイス',
-          posLabels: ['過去','現在','未来'], todayCard: '今日のカード',
           revTag: '逆位置',
           notFound: '該当するカードが見つかりません',
-          disclaimer: '解釈は標準的なライダー版に基づく目安。読み手の直感が最後の答えです。' },
+          disclaimer: '解釈は標準的なライダー版に基づく目安。読み手の直感が最後の答えです。',
+          imageCredit: 'カード画像: Rider-Waite-Smith デッキ (1909, Pamela Colman Smith) パブリックドメイン / Wikipedia',
+          yesAnswer: '✅ はい (Yes)',
+          noAnswer: '❌ いいえ (No)',
+          spreadNames: { one: '今日のカード', yesno: 'Yes / No', three: '過去・現在・未来', five: '5枚 十字', horseshoe: '7枚 ホースシュー', celtic: '10枚 ケルト十字', year: '12ヶ月 年間運勢' },
+          spreadPositions: {
+              one: ['今日のカード'],
+              yesno: ['答え'],
+              three: ['過去','現在','未来'],
+              five: ['現在','過去','上(意識)','未来','結果'],
+              horseshoe: ['過去','現在','隠れた影響','障害','周囲の態度','取るべき行動','結果'],
+              celtic: ['現状','課題(横断)','根/基盤','過去','上(意識)','未来','自分自身','環境','希望と恐れ','最終結果'],
+              year: ['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'],
+          } },
     en: { title: 'Tarot Meanings', back: '← Pinda Lab',
-          searchPh: '🔍 Search by name or keyword (e.g. Love, Tower, 恋人)',
-          draw1: '🃏 Draw 1', draw3: '🔮 3-Card Spread (Past · Present · Future)', showAll: '📚 All cards',
+          searchPh: '🔍 Search by name or keyword',
+          sp1Title: '🃏 1 Card', sp1Sub: 'Daily card',
+          spYNTitle: '⚖️ Yes/No', spYNSub: 'Answer reading',
+          sp3Title: '🔮 3 Cards', sp3Sub: 'Past · Present · Future',
+          sp5Title: '✨ 5-Card Cross', sp5Sub: 'Standard reading',
+          sp7Title: '🌅 7-Card Horseshoe', sp7Sub: 'Situation analysis',
+          sp10Title: '⛪ Celtic Cross', sp10Sub: 'Full 10-card reading',
+          sp12Title: '📅 12 Months', sp12Sub: 'Year ahead',
+          spAllTitle: '📚 All cards',
           filterAll: 'All', filterMajor: 'Major Arcana', filterWands: '🔥 Wands', filterCups: '💧 Cups', filterSwords: '🌀 Swords', filterPents: '🌳 Pentacles',
           tabBoth: 'Both', tabUp: 'Upright', tabRev: 'Reversed',
           catLove: '💕 Love', catWork: '💼 Work', catMoney: '💰 Money', catHealth: '🌿 Health',
           titleUp: '▲ Upright — Overall', titleRev: '▼ Reversed — Overall', titleAd: '✦ Advice',
-          posLabels: ['Past','Present','Future'], todayCard: 'Today\'s card',
           revTag: 'Reversed',
           notFound: 'No matching cards found',
-          disclaimer: 'Based on standard Rider-Waite interpretations. Trust your intuition for the final word.' },
+          disclaimer: 'Based on standard Rider-Waite interpretations. Trust your intuition for the final word.',
+          imageCredit: 'Card art: Rider-Waite-Smith deck (1909, Pamela Colman Smith) public domain / Wikipedia',
+          yesAnswer: '✅ YES',
+          noAnswer: '❌ NO',
+          spreadNames: { one: 'Daily Card', yesno: 'Yes / No', three: 'Past · Present · Future', five: '5-Card Cross', horseshoe: '7-Card Horseshoe', celtic: 'Celtic Cross', year: 'Year Ahead' },
+          spreadPositions: {
+              one: ['Today'],
+              yesno: ['Answer'],
+              three: ['Past','Present','Future'],
+              five: ['Present','Past','Above','Future','Outcome'],
+              horseshoe: ['Past','Present','Hidden','Obstacle','Environment','Action','Outcome'],
+              celtic: ['Present','Cross','Foundation','Past','Conscious','Future','Self','Environment','Hopes/Fears','Outcome'],
+              year: ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],
+          } },
 };
+
+const SPREADS = {
+    one: { count: 1, layout: 'single' },
+    yesno: { count: 1, layout: 'single', yesno: true },
+    three: { count: 3, layout: 'row' },
+    five: { count: 5, layout: 'cross' },
+    horseshoe: { count: 7, layout: 'horseshoe' },
+    celtic: { count: 10, layout: 'celtic' },
+    year: { count: 12, layout: 'year' },
+};
+
+// Major arcana filenames on Wikipedia/Commons
+const MAJOR_FILES = {
+    0: 'RWS_Tarot_00_Fool.jpg', 1: 'RWS_Tarot_01_Magician.jpg', 2: 'RWS_Tarot_02_High_Priestess.jpg',
+    3: 'RWS_Tarot_03_Empress.jpg', 4: 'RWS_Tarot_04_Emperor.jpg', 5: 'RWS_Tarot_05_Hierophant.jpg',
+    6: 'RWS_Tarot_06_Lovers.jpg', 7: 'RWS_Tarot_07_Chariot.jpg', 8: 'RWS_Tarot_08_Strength.jpg',
+    9: 'RWS_Tarot_09_Hermit.jpg', 10: 'RWS_Tarot_10_Wheel_of_Fortune.jpg', 11: 'RWS_Tarot_11_Justice.jpg',
+    12: 'RWS_Tarot_12_Hanged_Man.jpg', 13: 'RWS_Tarot_13_Death.jpg', 14: 'RWS_Tarot_14_Temperance.jpg',
+    15: 'RWS_Tarot_15_Devil.jpg', 16: 'RWS_Tarot_16_Tower.jpg', 17: 'RWS_Tarot_17_Star.jpg',
+    18: 'RWS_Tarot_18_Moon.jpg', 19: 'RWS_Tarot_19_Sun.jpg', 20: 'RWS_Tarot_20_Judgement.jpg',
+    21: 'RWS_Tarot_21_World.jpg',
+};
+const SUIT_NAMES = { wands: 'Wands', cups: 'Cups', swords: 'Swords', pents: 'Pents' };
+
+function imageUrl(card, width = 300) {
+    let filename;
+    if (card.st === 'major') filename = MAJOR_FILES[card.no];
+    else filename = `${SUIT_NAMES[card.st]}${String(card.no).padStart(2, '0')}.jpg`;
+    return `https://en.wikipedia.org/wiki/Special:FilePath/${encodeURIComponent(filename)}?width=${width}`;
+}
 
 const C = (n,en,no,st,em,kw,u,r,lu,lr,wu,wr,mu,mr,hu,hr,ad) => ({n,en,no,st,em,kw,u,r,lu,lr,wu,wr,mu,mr,hu,hr,ad});
 
@@ -801,11 +967,12 @@ C(t('ペンタクルのキング','King of Pentacles'),'King of Pentacles',14,'p
   t('実利と寛大さを両立せよ。','Combine practical and generous.')),
 ];
 
-// ───── render ─────
+// ──────────── render ────────────
 const grid = document.getElementById('grid');
 const search = document.getElementById('search');
 const filters = document.getElementById('filters');
-let curFilter = 'all', curQuery = '';
+const spreadArea = document.getElementById('spread-area');
+let curFilter = 'all', curQuery = '', curSpread = null;
 
 function applyLang(lang) {
     curLang = lang;
@@ -819,39 +986,138 @@ function applyLang(lang) {
     document.getElementById('title-up').textContent = dict.titleUp;
     document.getElementById('title-rev').textContent = dict.titleRev;
     document.getElementById('title-ad').textContent = dict.titleAd;
-    renderGrid();
+    if (curSpread) drawSpread(curSpread, true);
+    else renderGrid();
 }
 document.querySelectorAll('.lang-btn').forEach(btn => btn.addEventListener('click', () => applyLang(btn.dataset.lang)));
 
-function matches(card) {
-    if (curFilter !== 'all' && card.st !== curFilter) return false;
-    if (!curQuery) return true;
-    const q = curQuery.toLowerCase();
-    const fields = [L(card.n), card.en, ...(L(card.kw) || [])].filter(Boolean);
-    return fields.some(s => String(s).toLowerCase().includes(q) || String(s).includes(curQuery));
+function buildCardElement(card, opts = {}) {
+    const { reversed = false, small = false, posLabel = null, isCelticCross = false } = opts;
+    const slot = document.createElement('div');
+    slot.className = 'slot';
+    if (posLabel) {
+        const label = document.createElement('div');
+        label.className = 'pos-label';
+        label.textContent = posLabel;
+        slot.appendChild(label);
+    }
+    const tcard = document.createElement('div');
+    tcard.className = 'tcard' + (reversed ? ' reversed' : '');
+    tcard.dataset.st = card.st;
+    tcard.innerHTML = `
+        <span class="no-badge">${card.st === 'major' ? card.no : ''}</span>
+        ${reversed ? `<span class="rev-tag">${(I18N_UI[curLang] || I18N_UI.ja).revTag}</span>` : ''}
+        <img class="art" loading="lazy" alt="" src="${imageUrl(card, small ? 200 : 300)}" onerror="this.parentElement.classList.add('no-image')" />
+        <div class="fallback">
+            <div class="em">${card.em}</div>
+            <div class="nm">${L(card.n)}</div>
+        </div>`;
+    tcard.addEventListener('click', (e) => { e.stopPropagation(); openModal(card, reversed); });
+    slot.appendChild(tcard);
+    return slot;
 }
+
 function renderGrid() {
     grid.innerHTML = '';
     document.body.classList.remove('spread-mode');
-    document.getElementById('spread-area').innerHTML = '';
+    spreadArea.innerHTML = '';
+    spreadArea.className = 'spread-area';
     const dict = I18N_UI[curLang] || I18N_UI.ja;
-    const list = CARDS.filter(matches);
+    const list = CARDS.filter(c => {
+        if (curFilter !== 'all' && c.st !== curFilter) return false;
+        if (!curQuery) return true;
+        const q = curQuery.toLowerCase();
+        const fields = [L(c.n), c.en, ...(L(c.kw) || [])].filter(Boolean);
+        return fields.some(s => String(s).toLowerCase().includes(q) || String(s).includes(curQuery));
+    });
     if (list.length === 0) { grid.innerHTML = `<div class="empty-msg">${dict.notFound}</div>`; return; }
     list.forEach(c => {
-        const el = document.createElement('div');
-        el.className = 'card'; el.dataset.st = c.st;
-        el.innerHTML = `<div class="no">${c.st === 'major' ? c.no : ''}</div><div class="em">${c.em}</div><div class="nm">${L(c.n)}</div>`;
-        el.addEventListener('click', () => openModal(c, false));
-        grid.appendChild(el);
+        const slot = buildCardElement(c, { small: true });
+        slot.classList.remove('slot');
+        slot.firstChild?.remove?.(); // remove pos-label if any (none in grid)
+        grid.appendChild(slot.querySelector('.tcard'));
     });
+    // active sp button
+    document.querySelectorAll('.sp-btn').forEach(b => b.classList.toggle('active', b.dataset.sp === 'all'));
+    curSpread = null;
 }
+
+function drawSpread(spreadKey, reuseDraws = false) {
+    const dict = I18N_UI[curLang] || I18N_UI.ja;
+    const conf = SPREADS[spreadKey];
+    if (!conf) return;
+    document.body.classList.add('spread-mode');
+    spreadArea.innerHTML = '';
+    spreadArea.className = 'spread-area';
+
+    // Pick cards
+    let draws;
+    if (reuseDraws && drawSpread._lastDraws && drawSpread._lastSpread === spreadKey) {
+        draws = drawSpread._lastDraws;
+    } else {
+        const used = new Set();
+        draws = [];
+        while (draws.length < conf.count) {
+            const c = CARDS[Math.floor(Math.random() * CARDS.length)];
+            if (used.has(c.en)) continue;
+            used.add(c.en);
+            draws.push({ c, reversed: Math.random() < 0.5 });
+        }
+        drawSpread._lastDraws = draws;
+        drawSpread._lastSpread = spreadKey;
+    }
+    curSpread = spreadKey;
+
+    // Spread name header
+    const head = document.createElement('div');
+    head.className = 'spread-name';
+    head.textContent = '✦ ' + dict.spreadNames[spreadKey] + ' ✦';
+    spreadArea.appendChild(head);
+
+    // Yes/No banner
+    if (conf.yesno) {
+        const banner = document.createElement('div');
+        const isYes = !draws[0].reversed;
+        banner.className = 'yesno-banner ' + (isYes ? 'yes' : 'no');
+        banner.textContent = isYes ? dict.yesAnswer : dict.noAnswer;
+        spreadArea.appendChild(banner);
+    }
+
+    // Layout container
+    const layout = document.createElement('div');
+    layout.className = 'layout-' + conf.layout;
+    const positions = dict.spreadPositions[spreadKey];
+    draws.forEach((d, i) => {
+        const slot = buildCardElement(d.c, {
+            reversed: d.reversed,
+            small: conf.count > 5,
+            posLabel: positions[i],
+        });
+        slot.classList.add('pos-' + (i + 1));
+        if (i === 1 && spreadKey === 'celtic' && d.reversed) slot.classList.add('reversed');
+        layout.appendChild(slot);
+    });
+    spreadArea.appendChild(layout);
+
+    // Active button
+    document.querySelectorAll('.sp-btn').forEach(b => b.classList.toggle('active', b.dataset.sp === spreadKey));
+}
+
+document.querySelectorAll('.sp-btn').forEach(b => b.addEventListener('click', () => {
+    const sp = b.dataset.sp;
+    if (sp === 'all') renderGrid();
+    else drawSpread(sp);
+}));
+
 filters.addEventListener('click', (e) => {
     const tg = e.target.closest('.filt'); if (!tg) return;
     document.querySelectorAll('.filt').forEach(x => x.classList.toggle('active', x === tg));
-    curFilter = tg.dataset.f; renderGrid();
+    curFilter = tg.dataset.f;
+    renderGrid();
 });
-search.addEventListener('input', () => { curQuery = search.value.trim(); renderGrid(); });
+search.addEventListener('input', () => { curQuery = search.value.trim(); if (curQuery) renderGrid(); });
 
+// Modal
 const modal = document.getElementById('modal');
 function setTabState(tab) {
     const up = document.getElementById('d-up'); const rev = document.getElementById('d-rev');
@@ -861,10 +1127,16 @@ function setTabState(tab) {
     else { up.style.display = ''; rev.style.display = ''; }
 }
 function openModal(c, reversed) {
-    document.getElementById('d-card').dataset.st = c.st;
-    document.getElementById('d-card').classList.toggle('reversed', !!reversed);
+    const dCard = document.getElementById('d-card');
+    dCard.dataset.st = c.st;
+    dCard.classList.toggle('reversed', !!reversed);
+    dCard.classList.remove('no-image');
     document.getElementById('d-no').textContent = c.st === 'major' ? c.no : '';
+    const art = document.getElementById('d-art');
+    art.onerror = () => dCard.classList.add('no-image');
+    art.src = imageUrl(c, 400);
     document.getElementById('d-em').textContent = c.em;
+    document.getElementById('d-nm-fb').textContent = L(c.n);
     document.getElementById('d-nm').textContent = L(c.n);
     document.getElementById('d-en').textContent = c.en;
     const kw = document.getElementById('d-kw'); kw.innerHTML = '';
@@ -888,46 +1160,11 @@ document.getElementById('close').addEventListener('click', () => modal.classList
 modal.addEventListener('click', (e) => { if (e.target === modal) modal.classList.remove('show'); });
 document.querySelectorAll('.tab').forEach(tb => tb.addEventListener('click', () => setTabState(tb.dataset.tab)));
 
-function drawCard() { return { c: CARDS[Math.floor(Math.random() * CARDS.length)], reversed: Math.random() < 0.5 }; }
-function showDraw(draws) {
-    document.body.classList.add('spread-mode');
-    const area = document.getElementById('spread-area'); area.innerHTML = '';
-    const dict = I18N_UI[curLang] || I18N_UI.ja;
-    draws.forEach((d, i) => {
-        const slot = document.createElement('div'); slot.className = 'draw-slot';
-        const label = draws.length === 3 ? dict.posLabels[i] : dict.todayCard;
-        slot.innerHTML = `<div class="pos-label">${label}</div>`;
-        const card = document.createElement('div');
-        card.className = 'draw-card' + (d.reversed ? ' reversed' : '');
-        card.dataset.st = d.c.st;
-        card.innerHTML = `${d.reversed ? `<div class="rev-tag">${dict.revTag}</div>` : ''}<div class="no">${d.c.st === 'major' ? d.c.no : ''}</div><div class="em">${d.c.em}</div><div class="nm-jp">${L(d.c.n)}</div><div class="nm-en">${d.c.en}</div>`;
-        card.addEventListener('click', () => openModal(d.c, d.reversed));
-        slot.appendChild(card);
-        area.appendChild(slot);
-    });
-    grid.innerHTML = '';
-}
-document.getElementById('draw1').addEventListener('click', () => showDraw([drawCard()]));
-document.getElementById('draw3').addEventListener('click', () => {
-    const drawn = new Set(); const draws = [];
-    while (draws.length < 3) {
-        const d = drawCard();
-        const key = L(d.c.n);
-        if (drawn.has(key)) continue;
-        drawn.add(key); draws.push(d);
-    }
-    showDraw(draws);
-});
-document.getElementById('show-all').addEventListener('click', () => {
-    document.body.classList.remove('spread-mode');
-    document.getElementById('spread-area').innerHTML = '';
-    renderGrid();
-});
-
 let initLang;
 try { initLang = localStorage.getItem('pl-lang'); } catch {}
 if (!initLang) { const nav = (navigator.language || 'ja').toLowerCase(); initLang = nav.startsWith('ja') ? 'ja' : 'en'; }
 applyLang(initLang);
+renderGrid();
 </script>
 </body>
 </html>
