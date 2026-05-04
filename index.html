@@ -59,9 +59,22 @@ input[type="text"]:focus { border-color: #fbbf24; }
 [data-st="swords"] { --c1: #374151; --c2: #111827; }
 [data-st="pents"] { --c1: #14532d; --c2: #052e16; }
 
-/* Browse grid */
-.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(96px, 1fr)); gap: 6px; }
-.grid .tcard { width: 100%; }
+/* Card list */
+.card-list { display: flex; flex-direction: column; gap: 8px; }
+.card-row { background: rgba(30,27,75,0.5); border: 1px solid rgba(167,139,250,0.25); border-radius: 10px; padding: 10px 12px; cursor: pointer; transition: border-color 0.15s, background 0.15s; }
+.card-row:hover { border-color: rgba(251,191,36,0.6); background: rgba(30,27,75,0.7); }
+.card-row-head { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
+.card-row-em { font-size: 22px; line-height: 1; flex-shrink: 0; }
+.card-row-name { font-size: 15px; font-weight: 700; color: #fbbf24; }
+.card-row-en { font-size: 11px; color: #a78bfa; margin-left: 4px; font-family: system-ui, sans-serif; }
+.card-row-kw { display: flex; gap: 4px; flex-wrap: wrap; margin-bottom: 6px; }
+.card-row-kw span { background: rgba(167,139,250,0.15); border: 1px solid rgba(167,139,250,0.3); color: #a78bfa; padding: 1px 7px; border-radius: 10px; font-size: 11px; font-family: system-ui, sans-serif; }
+.card-row-meanings { display: grid; grid-template-columns: 1fr 1fr; gap: 4px 10px; font-size: 12px; line-height: 1.5; }
+@media (max-width: 480px) { .card-row-meanings { grid-template-columns: 1fr; } }
+.card-row-up { color: #d4d0e8; }
+.card-row-up::before { content: '▲ '; color: #fbbf24; font-size: 10px; }
+.card-row-rev { color: #c4b8d8; }
+.card-row-rev::before { content: '▼ '; color: #f87171; font-size: 10px; }
 
 /* Spread layouts */
 .spread-area { padding: 12px 0 24px; }
@@ -137,7 +150,7 @@ input[type="text"]:focus { border-color: #fbbf24; }
     .layout-year .slot .tcard { max-width: 70px; }
 }
 
-.spread-mode .grid { display: none; }
+.spread-mode .card-list { display: none; }
 .spread-mode .filters { display: none; }
 .spread-mode .search-row { display: none; }
 .back-to-grid { color: #a78bfa; font-size: 13px; font-family: system-ui, sans-serif; cursor: pointer; margin-bottom: 12px; padding: 6px 0; }
@@ -214,7 +227,7 @@ input[type="text"]:focus { border-color: #fbbf24; }
 </div>
 
 <div class="spread-area" id="spread-area"></div>
-<div class="grid" id="grid"></div>
+<div class="card-list" id="grid"></div>
 
 <div class="spread-section">
     <div class="spread-toggle" id="spread-toggle" data-i18n="spreadToggle">🔮 スプレッド占い</div>
@@ -1071,12 +1084,13 @@ function renderGrid() {
     });
     if (list.length === 0) { grid.innerHTML = `<div class="empty-msg">${dict.notFound}</div>`; return; }
     list.forEach(c => {
-        const slot = buildCardElement(c, { small: true });
-        slot.classList.remove('slot');
-        slot.firstChild?.remove?.(); // remove pos-label if any (none in grid)
-        grid.appendChild(slot.querySelector('.tcard'));
+        const row = document.createElement('div');
+        row.className = 'card-row';
+        const kwHtml = (L(c.kw) || []).map(k => `<span>${k}</span>`).join('');
+        row.innerHTML = `<div class="card-row-head"><span class="card-row-em">${c.em}</span><span class="card-row-name">${L(c.n)}</span><span class="card-row-en">${c.en}</span></div><div class="card-row-kw">${kwHtml}</div><div class="card-row-meanings"><div class="card-row-up">${L(c.u)}</div><div class="card-row-rev">${L(c.r)}</div></div>`;
+        row.addEventListener('click', () => openModal(c, false));
+        grid.appendChild(row);
     });
-    // active sp button
     document.querySelectorAll('.sp-btn').forEach(b => b.classList.toggle('active', b.dataset.sp === 'all'));
     curSpread = null;
 }
