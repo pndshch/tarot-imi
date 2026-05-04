@@ -59,22 +59,18 @@ input[type="text"]:focus { border-color: #fbbf24; }
 [data-st="swords"] { --c1: #374151; --c2: #111827; }
 [data-st="pents"] { --c1: #14532d; --c2: #052e16; }
 
-/* Card list */
-.card-list { display: flex; flex-direction: column; gap: 8px; }
-.card-row { background: rgba(30,27,75,0.5); border: 1px solid rgba(167,139,250,0.25); border-radius: 10px; padding: 10px 12px; cursor: pointer; transition: border-color 0.15s, background 0.15s; }
-.card-row:hover { border-color: rgba(251,191,36,0.6); background: rgba(30,27,75,0.7); }
-.card-row-head { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
-.card-row-em { font-size: 22px; line-height: 1; flex-shrink: 0; }
-.card-row-name { font-size: 15px; font-weight: 700; color: #fbbf24; }
-.card-row-en { font-size: 11px; color: #a78bfa; margin-left: 4px; font-family: system-ui, sans-serif; }
-.card-row-kw { display: flex; gap: 4px; flex-wrap: wrap; margin-bottom: 6px; }
-.card-row-kw span { background: rgba(167,139,250,0.15); border: 1px solid rgba(167,139,250,0.3); color: #a78bfa; padding: 1px 7px; border-radius: 10px; font-size: 11px; font-family: system-ui, sans-serif; }
-.card-row-meanings { display: grid; grid-template-columns: 1fr 1fr; gap: 4px 10px; font-size: 12px; line-height: 1.5; }
-@media (max-width: 480px) { .card-row-meanings { grid-template-columns: 1fr; } }
-.card-row-up { color: #d4d0e8; }
-.card-row-up::before { content: '▲ '; color: #fbbf24; font-size: 10px; }
-.card-row-rev { color: #c4b8d8; }
-.card-row-rev::before { content: '▼ '; color: #f87171; font-size: 10px; }
+/* Card grid */
+.card-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 6px; }
+@media (min-width: 600px) { .card-list { grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); } }
+.card-cell { background: linear-gradient(160deg, var(--c1, #312e81), var(--c2, #1e1b4b)); border: 1px solid rgba(167,139,250,0.3); border-radius: 8px; padding: 8px 9px; cursor: pointer; transition: border-color 0.15s, box-shadow 0.15s; display: flex; flex-direction: column; gap: 3px; }
+.card-cell:hover { border-color: rgba(251,191,36,0.6); box-shadow: 0 4px 12px rgba(251,191,36,0.2); }
+.card-cell-head { display: flex; align-items: center; gap: 5px; }
+.card-cell-em { font-size: 18px; line-height: 1; }
+.card-cell-name { font-size: 13px; font-weight: 700; color: #fbbf24; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.card-cell-kw { font-size: 10px; color: #a78bfa; font-family: system-ui, sans-serif; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.card-cell-up, .card-cell-rev { font-size: 11px; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.card-cell-up { color: #d4d0e8; }
+.card-cell-rev { color: #b8a8c8; }
 
 /* Spread layouts */
 .spread-area { padding: 12px 0 24px; }
@@ -1084,12 +1080,13 @@ function renderGrid() {
     });
     if (list.length === 0) { grid.innerHTML = `<div class="empty-msg">${dict.notFound}</div>`; return; }
     list.forEach(c => {
-        const row = document.createElement('div');
-        row.className = 'card-row';
-        const kwHtml = (L(c.kw) || []).map(k => `<span>${k}</span>`).join('');
-        row.innerHTML = `<div class="card-row-head"><span class="card-row-em">${c.em}</span><span class="card-row-name">${L(c.n)}</span><span class="card-row-en">${c.en}</span></div><div class="card-row-kw">${kwHtml}</div><div class="card-row-meanings"><div class="card-row-up">${L(c.u)}</div><div class="card-row-rev">${L(c.r)}</div></div>`;
-        row.addEventListener('click', () => openModal(c, false));
-        grid.appendChild(row);
+        const cell = document.createElement('div');
+        cell.className = 'card-cell';
+        cell.dataset.st = c.st;
+        const kw = (L(c.kw) || []).join(' · ');
+        cell.innerHTML = `<div class="card-cell-head"><span class="card-cell-em">${c.em}</span><span class="card-cell-name">${L(c.n)}</span></div><div class="card-cell-kw">${kw}</div><div class="card-cell-up">▲ ${L(c.u)}</div><div class="card-cell-rev">▼ ${L(c.r)}</div>`;
+        cell.addEventListener('click', () => openModal(c, false));
+        grid.appendChild(cell);
     });
     document.querySelectorAll('.sp-btn').forEach(b => b.classList.toggle('active', b.dataset.sp === 'all'));
     curSpread = null;
