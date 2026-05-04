@@ -20,11 +20,14 @@ body { background: radial-gradient(ellipse at top, #1e1b4b 0%, #0f0a1f 60%, #000
 .brand-sub { color: #a78bfa; font-size: 12px; margin-top: 6px; letter-spacing: 2px; }
 
 .controls { background: rgba(30,27,75,0.6); border: 1px solid rgba(167,139,250,0.3); border-radius: 12px; padding: 12px; margin-bottom: 12px; backdrop-filter: blur(10px); }
-.search-row { display: flex; gap: 8px; margin-bottom: 10px; }
+.search-row { display: flex; gap: 8px; }
 input[type="text"] { flex: 1; padding: 12px 14px; background: rgba(0,0,0,0.4); border: 1px solid rgba(167,139,250,0.4); color: #fff; border-radius: 8px; font-size: 15px; font-family: inherit; outline: none; }
 input[type="text"]:focus { border-color: #fbbf24; }
 
-.spread-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; }
+.spread-section { margin-top: 24px; background: rgba(30,27,75,0.6); border: 1px solid rgba(167,139,250,0.3); border-radius: 12px; padding: 12px; backdrop-filter: blur(10px); }
+.spread-toggle { text-align: center; font-size: 14px; font-weight: 700; color: #a78bfa; cursor: pointer; padding: 6px; font-family: system-ui, sans-serif; }
+.spread-mode .spread-section { display: none; }
+.spread-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; margin-top: 10px; }
 @media (min-width: 600px) { .spread-grid { grid-template-columns: repeat(4, 1fr); } }
 .sp-btn { padding: 10px 6px; background: rgba(167,139,250,0.15); border: 1px solid rgba(167,139,250,0.4); color: #e6e3f0; border-radius: 8px; font-family: 'Hiragino Maru Gothic ProN', sans-serif; font-size: 12px; font-weight: 700; cursor: pointer; line-height: 1.4; transition: background 0.15s, border-color 0.15s; }
 .sp-btn:hover { background: rgba(167,139,250,0.3); }
@@ -137,6 +140,7 @@ input[type="text"]:focus { border-color: #fbbf24; }
 .spread-mode .grid { display: none; }
 .spread-mode .filters { display: none; }
 .spread-mode .search-row { display: none; }
+.back-to-grid { color: #a78bfa; font-size: 13px; font-family: system-ui, sans-serif; cursor: pointer; margin-bottom: 12px; padding: 6px 0; }
 
 /* Modal */
 .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 100; display: none; align-items: flex-end; justify-content: center; backdrop-filter: blur(8px); }
@@ -198,16 +202,6 @@ input[type="text"]:focus { border-color: #fbbf24; }
     <div class="search-row">
         <input id="search" type="text" data-i18n-placeholder="searchPh" autocomplete="off" />
     </div>
-    <div class="spread-grid">
-        <button class="sp-btn" data-sp="one"><span data-i18n="sp1Title">🃏 1枚</span><small data-i18n="sp1Sub">今日のカード</small></button>
-        <button class="sp-btn" data-sp="yesno"><span data-i18n="spYNTitle">⚖️ Yes/No</span><small data-i18n="spYNSub">答えを引く</small></button>
-        <button class="sp-btn" data-sp="three"><span data-i18n="sp3Title">🔮 3枚</span><small data-i18n="sp3Sub">過去・現在・未来</small></button>
-        <button class="sp-btn" data-sp="five"><span data-i18n="sp5Title">✨ 5枚十字</span><small data-i18n="sp5Sub">基本リーディング</small></button>
-        <button class="sp-btn" data-sp="horseshoe"><span data-i18n="sp7Title">🌅 7枚 ホースシュー</span><small data-i18n="sp7Sub">状況分析</small></button>
-        <button class="sp-btn" data-sp="celtic"><span data-i18n="sp10Title">⛪ ケルト十字</span><small data-i18n="sp10Sub">本格 10枚</small></button>
-        <button class="sp-btn" data-sp="year"><span data-i18n="sp12Title">📅 12ヶ月</span><small data-i18n="sp12Sub">年間運勢</small></button>
-        <button class="sp-btn gray" data-sp="all"><span data-i18n="spAllTitle">📚 全カード一覧</span></button>
-    </div>
 </div>
 
 <div class="filters" id="filters">
@@ -221,6 +215,20 @@ input[type="text"]:focus { border-color: #fbbf24; }
 
 <div class="spread-area" id="spread-area"></div>
 <div class="grid" id="grid"></div>
+
+<div class="spread-section">
+    <div class="spread-toggle" id="spread-toggle" data-i18n="spreadToggle">🔮 スプレッド占い</div>
+    <div class="spread-grid" id="spread-panel">
+        <button class="sp-btn" data-sp="one"><span data-i18n="sp1Title">🃏 1枚</span><small data-i18n="sp1Sub">今日のカード</small></button>
+        <button class="sp-btn" data-sp="yesno"><span data-i18n="spYNTitle">⚖️ Yes/No</span><small data-i18n="spYNSub">答えを引く</small></button>
+        <button class="sp-btn" data-sp="three"><span data-i18n="sp3Title">🔮 3枚</span><small data-i18n="sp3Sub">過去・現在・未来</small></button>
+        <button class="sp-btn" data-sp="five"><span data-i18n="sp5Title">✨ 5枚十字</span><small data-i18n="sp5Sub">基本リーディング</small></button>
+        <button class="sp-btn" data-sp="horseshoe"><span data-i18n="sp7Title">🌅 7枚 ホースシュー</span><small data-i18n="sp7Sub">状況分析</small></button>
+        <button class="sp-btn" data-sp="celtic"><span data-i18n="sp10Title">⛪ ケルト十字</span><small data-i18n="sp10Sub">本格 10枚</small></button>
+        <button class="sp-btn" data-sp="year"><span data-i18n="sp12Title">📅 12ヶ月</span><small data-i18n="sp12Sub">年間運勢</small></button>
+        <button class="sp-btn gray" data-sp="all"><span data-i18n="spAllTitle">📚 全カード一覧</span></button>
+    </div>
+</div>
 
 <div class="footer">
     <p><a href="https://pndshch.github.io/">© Pinda Lab</a> · <a href="https://www.buymeacoffee.com/pndshch" target="_blank">☕</a></p>
@@ -295,6 +303,7 @@ function L(field) { return field && typeof field === 'object' && 'j' in field ? 
 const I18N_UI = {
     ja: { title: 'タロットの意味', back: '← Pinda Lab',
           searchPh: '🔍 カード名・キーワードで検索',
+          spreadToggle: '🔮 スプレッド占い', backToList: '← カード一覧に戻る',
           sp1Title: '🃏 1枚', sp1Sub: '今日のカード',
           spYNTitle: '⚖️ Yes/No', spYNSub: '答えを引く',
           sp3Title: '🔮 3枚', sp3Sub: '過去・現在・未来',
@@ -325,6 +334,7 @@ const I18N_UI = {
           } },
     en: { title: 'Tarot Meanings', back: '← Pinda Lab',
           searchPh: '🔍 Search by name or keyword',
+          spreadToggle: '🔮 Spread Reading', backToList: '← Back to card list',
           sp1Title: '🃏 1 Card', sp1Sub: 'Daily card',
           spYNTitle: '⚖️ Yes/No', spYNSub: 'Answer reading',
           sp3Title: '🔮 3 Cards', sp3Sub: 'Past · Present · Future',
@@ -1079,6 +1089,13 @@ function drawSpread(spreadKey, reuseDraws = false) {
     spreadArea.innerHTML = '';
     spreadArea.className = 'spread-area';
 
+    // Back button
+    const backBtn = document.createElement('div');
+    backBtn.className = 'back-to-grid';
+    backBtn.textContent = (I18N_UI[curLang] || I18N_UI.ja).backToList || '← カード一覧に戻る';
+    backBtn.addEventListener('click', () => renderGrid());
+    spreadArea.appendChild(backBtn);
+
     // Pick cards
     let draws;
     if (reuseDraws && drawSpread._lastDraws && drawSpread._lastSpread === spreadKey) {
@@ -1135,8 +1152,14 @@ function drawSpread(spreadKey, reuseDraws = false) {
 document.querySelectorAll('.sp-btn').forEach(b => b.addEventListener('click', () => {
     const sp = b.dataset.sp;
     if (sp === 'all') renderGrid();
-    else drawSpread(sp);
+    else { drawSpread(sp); window.scrollTo({ top: 0, behavior: 'smooth' }); }
 }));
+
+document.getElementById('spread-toggle').addEventListener('click', () => {
+    const panel = document.getElementById('spread-panel');
+    panel.style.display = panel.style.display === 'none' ? '' : 'none';
+});
+document.getElementById('spread-panel').style.display = 'none';
 
 filters.addEventListener('click', (e) => {
     const tg = e.target.closest('.filt'); if (!tg) return;
