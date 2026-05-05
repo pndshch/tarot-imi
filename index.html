@@ -71,6 +71,7 @@ input[type="text"]:focus { border-color: #fbbf24; }
 .card-cell-up, .card-cell-rev { font-size: 11px; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 .card-cell-up { color: #d4d0e8; }
 .card-cell-rev { color: #b8a8c8; }
+.card-cell-tm { font-size: 10px; line-height: 1.4; color: #5eead4; margin-top: 3px; border-top: 1px solid rgba(94,234,212,0.2); padding-top: 3px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 
 /* Spread layouts */
 .spread-area { padding: 12px 0 24px; }
@@ -182,6 +183,9 @@ input[type="text"]:focus { border-color: #fbbf24; }
 .cat { background: rgba(0,0,0,0.3); padding: 8px 10px; border-radius: 8px; border: 1px solid rgba(167,139,250,0.2); }
 .cat-label { font-size: 10px; color: #a78bfa; letter-spacing: 1.5px; font-family: system-ui, sans-serif; margin-bottom: 3px; font-weight: 700; }
 .cat-text { font-size: 13px; line-height: 1.5; color: #e6e3f0; }
+.timing-section { background: linear-gradient(135deg, rgba(94,234,212,0.12), rgba(20,184,166,0.08)); border: 1px solid rgba(94,234,212,0.3); padding: 12px 14px; border-radius: 10px; margin-top: 12px; }
+.timing-label { font-size: 11px; color: #5eead4; letter-spacing: 2px; margin-bottom: 4px; font-weight: 800; font-family: system-ui, sans-serif; }
+.timing-text { font-size: 14px; line-height: 1.6; color: #ccfbf1; }
 .advice { background: linear-gradient(135deg, rgba(251,191,36,0.15), rgba(245,158,11,0.1)); border: 1px solid rgba(251,191,36,0.3); padding: 12px 14px; border-radius: 10px; margin-top: 12px; }
 .advice-label { font-size: 11px; color: #fbbf24; letter-spacing: 2px; margin-bottom: 4px; font-weight: 800; font-family: system-ui, sans-serif; }
 .advice-text { font-size: 14px; line-height: 1.6; color: #fef3c7; }
@@ -296,6 +300,11 @@ input[type="text"]:focus { border-color: #fbbf24; }
             </div>
         </div>
 
+        <div class="timing-section">
+            <div class="timing-label" data-i18n="timingLabel">⏱ 時期の目安</div>
+            <div class="timing-text" id="d-tm"></div>
+        </div>
+
         <div class="advice">
             <div class="advice-label" id="title-ad">✦ アドバイス</div>
             <div class="advice-text" id="d-ad"></div>
@@ -312,7 +321,7 @@ function L(field) { return field && typeof field === 'object' && 'j' in field ? 
 const I18N_UI = {
     ja: { title: 'タロットの意味', back: '← Pinda Lab',
           searchPh: '🔍 カード名・キーワードで検索',
-          spreadToggle: '🔮 スプレッド占い', backToList: '← カード一覧に戻る',
+          spreadToggle: '🔮 スプレッド占い', backToList: '← カード一覧に戻る', timingLabel: '⏱ 時期の目安',
           sp1Title: '🃏 1枚', sp1Sub: '今日のカード',
           spYNTitle: '⚖️ Yes/No', spYNSub: '答えを引く',
           sp3Title: '🔮 3枚', sp3Sub: '過去・現在・未来',
@@ -343,7 +352,7 @@ const I18N_UI = {
           } },
     en: { title: 'Tarot Meanings', back: '← Pinda Lab',
           searchPh: '🔍 Search by name or keyword',
-          spreadToggle: '🔮 Spread Reading', backToList: '← Back to card list',
+          spreadToggle: '🔮 Spread Reading', backToList: '← Back to card list', timingLabel: '⏱ Timing Guide',
           sp1Title: '🃏 1 Card', sp1Sub: 'Daily card',
           spYNTitle: '⚖️ Yes/No', spYNSub: 'Answer reading',
           sp3Title: '🔮 3 Cards', sp3Sub: 'Past · Present · Future',
@@ -1015,6 +1024,93 @@ C(t('ペンタクルのキング','King of Pentacles'),'King of Pentacles',14,'p
   t('実利と寛大さを両立せよ。','Combine practical and generous.')),
 ];
 
+// Timing reading data — keyed by "suit-number"
+const TIMING = {
+// Major Arcana
+'major-0': t('今すぐ。考える前に動くのが吉。直感のタイミングを逃さない。','Now. Move before thinking. Don\'t miss your instinct\'s timing.'),
+'major-1': t('1〜2週間以内。やる気と能力がピークの今が好機。鉄は熱いうちに。','Within 1-2 weeks. Peak motivation now. Strike while hot.'),
+'major-2': t('2〜3ヶ月。焦らず待つ。答えが見えるまで静観。内なるタイミングを信じる。','2-3 months. Wait patiently. Trust inner timing until clarity comes.'),
+'major-3': t('3〜9ヶ月。種まきから収穫まで時間が必要。春が吉。じっくり育てる。','3-9 months. Seeds need time. Spring is good. Nurture patiently.'),
+'major-4': t('3〜4ヶ月。計画通りに進める。予定を立てて着実に。急がず正攻法で。','3-4 months. Follow the plan. Build steadily. No shortcuts.'),
+'major-5': t('約6ヶ月。正式な手続き・伝統的なタイミングに従う。急がば回れ。','About 6 months. Follow formal processes and proper timing. Patience pays.'),
+'major-6': t('1〜2ヶ月以内。心が一致したと感じたとき。迷ったらそのとき。','Within 1-2 months. When hearts align. If unsure, that\'s the moment.'),
+'major-7': t('1ヶ月以内。勢いのある今。迷ったら負け。即断即決で進む。','Within 1 month. You have momentum. Hesitation loses. Decide and go.'),
+'major-8': t('3〜6ヶ月。忍耐が必要。焦らず穏やかに力を蓄えて。急がない。','3-6 months. Patience needed. Build strength gently. Don\'t rush.'),
+'major-9': t('半年〜1年。内省の時期が必要。答えが見えるまで急がない。','6 months to 1 year. Time for reflection. Don\'t rush until clarity.'),
+'major-10': t('予測不能。突然来る。準備だけはしておく。運命のタイミング。','Unpredictable. Comes suddenly. Just stay prepared. Fate\'s timing.'),
+'major-11': t('2〜3ヶ月。正確に予定通り。正しいことをしていれば正しい時に届く。','2-3 months. Exactly on schedule. Do right, and it arrives on time.'),
+'major-12': t('半年以上。急いでも無駄。今は学びの期間。視点が変わってから動く。','6+ months. Rushing is futile. This is learning time. Act after your view shifts.'),
+'major-13': t('1〜3ヶ月以内。大きな転換。終わりと始まりが同時に来る。手放した瞬間から。','Within 1-3 months. Major turn. End and start arrive together. From the moment you let go.'),
+'major-14': t('3〜6ヶ月。ゆっくりと調和的に進む。急ぐと崩れる。バランスが鍵。','3-6 months. Progress gently in harmony. Rushing breaks it. Balance is key.'),
+'major-15': t('半年以上。現状から抜け出すには時間がかかる。依存を断てば早まる。','6+ months. Escaping takes time. Break dependency and it speeds up.'),
+'major-16': t('突然。数日〜2週間。予期せず来る。衝撃後にすぐ新しい動きが始まる。','Sudden. Days to 2 weeks. Comes without warning. New movement starts right after shock.'),
+'major-17': t('半年〜1年。長い目で見ると叶う。希望を持ち続けることが条件。','6 months to 1 year. Long-term it works. Keeping hope is the condition.'),
+'major-18': t('不明瞭。2〜3ヶ月後にやっと見える。霧が晴れるまで大きな決断は避ける。','Unclear. Visible in 2-3 months. Avoid big decisions until fog lifts.'),
+'major-19': t('1ヶ月以内。今が一番良い時期。夏が特に吉。迷わず明るく進む。','Within 1 month. Now is the best time. Summer especially. Go bright.'),
+'major-20': t('今まさに。決断のときが来ている。過去を清算して即行動。','Right now. The time for decision has come. Settle the past and act.'),
+'major-21': t('1〜3ヶ月。完成間近。最後の仕上げの期間。ゴールはすぐそこ。','1-3 months. Near completion. Final touches. The goal is right there.'),
+// Wands (fast: days to weeks)
+'wands-1': t('即座〜1週間。情熱が燃えている今。鮮度が命。すぐ動く。','Immediate to 1 week. Passion burns now. Freshness is life. Move now.'),
+'wands-2': t('2〜3週間。計画を立てたらすぐ実行。迷いは2週間以内に決着を。','2-3 weeks. Plan then execute. Resolve doubts within 2 weeks.'),
+'wands-3': t('3週間〜1ヶ月。動き出した計画の結果が見え始める頃。少し待つ。','3 weeks to 1 month. Results start showing. Wait a little more.'),
+'wands-4': t('1ヶ月以内。お祝い事や節目のタイミングと重なる。近い良い日。','Within 1 month. Coincides with a celebration or milestone. A good day soon.'),
+'wands-5': t('1〜2ヶ月。競争や衝突が落ち着いてから。今は混乱期。嵐のあと。','1-2 months. After competition settles. This is the chaos phase. After the storm.'),
+'wands-6': t('6週間以内。勝利のタイミング。努力が実り評価される頃。もうすぐ。','Within 6 weeks. Victory timing. When effort bears fruit. Almost there.'),
+'wands-7': t('2〜3ヶ月。試練を乗り越えた後に道が開ける。今は耐えるとき。','2-3 months. The path opens after overcoming trial. Now is for enduring.'),
+'wands-8': t('数日〜1週間！非常に速い。メッセージや連絡が来るのも今すぐ。','Days to 1 week! Very fast. Messages and contact also coming now.'),
+'wands-9': t('2〜3ヶ月。あと少しの辛抱。ゴールは近い。ここで折れないで。','2-3 months. A little more patience. Goal is close. Don\'t break now.'),
+'wands-10': t('2〜3ヶ月。今の重荷を下ろしてから。整理した後に新しい展開。','2-3 months. After releasing burdens. New developments after organizing.'),
+'wands-11': t('2〜3週間。新しい知らせやチャンスが届く頃。好奇心で動いて。','2-3 weeks. New news or chance arrives. Move with curiosity.'),
+'wands-12': t('1〜2週間。スピーディーに進む。行動力で勝負。考えすぎない。','1-2 weeks. Progresses swiftly. Win with action. Don\'t overthink.'),
+'wands-13': t('1〜2ヶ月。春が吉。自信を持って行動すると早く結果が出る。','1-2 months. Spring is good. Confident action brings faster results.'),
+'wands-14': t('1ヶ月前後。リーダーシップを発揮するとき。ビジョンで引っ張る。','Around 1 month. Time to lead. Pull forward with vision.'),
+// Cups (moderate: weeks to months)
+'cups-1': t('2〜4週間。感情が開いたとき。心が動いたらそのまま素直に。','2-4 weeks. When emotions open. When your heart moves, go with it.'),
+'cups-2': t('2週間〜1ヶ月。出会いや結びつきは近い。心が通じたタイミング。','2 weeks to 1 month. Meeting or bonding is close. When hearts connect.'),
+'cups-3': t('3〜4週間。お祝いや集まりの頃。人が集まるタイミングに吉あり。','3-4 weeks. Around celebrations. Good timing when people gather.'),
+'cups-4': t('1〜3ヶ月。今は停滞期。退屈の先に新しい感情が芽生える。待つ。','1-3 months. Stagnation now. New feelings sprout beyond boredom. Wait.'),
+'cups-5': t('2〜3ヶ月。悲しみが癒えてから。無理に急がない。心の準備ができてから。','2-3 months. After grief heals. Don\'t force it. When heart is ready.'),
+'cups-6': t('春か秋。懐かしい人との再会や過去が関わる頃。季節の変わり目。','Spring or autumn. Around reunions or when past connects. Season changes.'),
+'cups-7': t('不確実。まず選択を一つに絞る。決断してから2ヶ月で動き出す。','Uncertain. First narrow to one choice. Movement starts 2 months after deciding.'),
+'cups-8': t('1〜2ヶ月。手放す決意をしたらすぐ。去る勇気が新しい扉を開く。','1-2 months. Right after deciding to let go. Courage to leave opens new doors.'),
+'cups-9': t('1〜3ヶ月。願いが叶うのは近い。具体的にイメージするほど早い。','1-3 months. Wish fulfillment is near. The clearer you imagine, the sooner.'),
+'cups-10': t('3〜6ヶ月。家族的な幸福は少し先。土台作りの時間。焦らず築く。','3-6 months. Family happiness a bit ahead. Foundation-building time.'),
+'cups-11': t('2〜4週間。感情的なメッセージや直感が届く。繊細に受け取る。','2-4 weeks. Emotional message or intuition arrives. Receive gently.'),
+'cups-12': t('2〜4週間。ロマンチックな展開。誘いや提案が近く来る。心で判断。','2-4 weeks. Romantic development. Invitation or offer comes soon. Judge by heart.'),
+'cups-13': t('2〜3ヶ月。夏が吉。感情的な深まりには時間をかける。直感を信じて。','2-3 months. Summer is good. Emotional deepening takes time. Trust intuition.'),
+'cups-14': t('2〜3ヶ月。感情を制してから。冷静になったときが動きどき。','2-3 months. After mastering emotions. Move when calm arrives.'),
+// Swords (variable: can be fast or delayed)
+'swords-1': t('即座〜数日。明晰な判断ができる今。真実が見えている。即断。','Immediate to days. Clear judgment available now. Truth is visible. Decide now.'),
+'swords-2': t('決断次第。決めない限り動かない。決めた瞬間に動き出す。','Depends on your decision. Nothing moves until you decide. The moment you choose, it starts.'),
+'swords-3': t('1〜3ヶ月。痛みを通過してから。心の傷が癒える時間が必要。','1-3 months. After passing through pain. Heart wounds need healing time.'),
+'swords-4': t('休息後1〜2ヶ月。今は回復期。十分休んでから動くと成功する。','1-2 months after rest. Recovery period now. Rest well, then succeed.'),
+'swords-5': t('半年〜1年。争いが完全に落ち着いてから。今動くと泥沼。転職は待つ。','6 months to 1 year. After conflict fully settles. Moving now means quagmire. Wait on job changes.'),
+'swords-6': t('2〜6週間。移行期間。今まさに動いている最中。静かに進む。','2-6 weeks. Transition period. Already in motion. Progress quietly.'),
+'swords-7': t('不明。タイミングが読みにくい。慎重に情報を集めてから判断。','Unknown. Timing hard to read. Gather information carefully before judging.'),
+'swords-8': t('1〜3ヶ月。自分の思い込みが外れたとき。制限は自分で作っている。','1-3 months. When your assumptions break. The limitations are self-made.'),
+'swords-9': t('2〜4週間。心配事の9割は起きない。不安が去った後すぐ動ける。','2-4 weeks. 90% of worries won\'t happen. You can move right after anxiety passes.'),
+'swords-10': t('どん底の直後〜1ヶ月以内。底を打ったら即上昇。夜明け前が一番暗い。','Right after rock bottom to within 1 month. After bottom, rise begins. Darkest before dawn.'),
+'swords-11': t('1〜2週間。情報が来てから判断。重要な知らせを待つ。','1-2 weeks. Judge after information arrives. Wait for important news.'),
+'swords-12': t('数日〜1週間。非常に速い展開。即座の行動が求められる。','Days to 1 week. Very rapid development. Immediate action required.'),
+'swords-13': t('1〜2ヶ月。秋が吉。冷静な判断ができるようになってから。','1-2 months. Autumn is good. After you can judge calmly.'),
+'swords-14': t('1〜2ヶ月。論理的に最適なタイミングを計算して動く。感情は排除。','1-2 months. Calculate the optimal timing logically. Remove emotion.'),
+// Pentacles (slow: months to years)
+'pents-1': t('1〜3ヶ月。種が芽を出すまでの時間。焦らず土台を作る。着手は今。','1-3 months. Time for seeds to sprout. Build foundation without rush. Start now.'),
+'pents-2': t('2〜3ヶ月。バランスが取れてから。両立の目処がついたら動く。','2-3 months. After finding balance. Move when you can manage both.'),
+'pents-3': t('3〜6ヶ月。仲間との協力で実現する。一人では遅い。チームで早まる。','3-6 months. Achieved through collaboration. Alone is slow. Faster with a team.'),
+'pents-4': t('半年以上。守りに入りすぎると停滞する。手放す決断で時期が早まる。','6+ months. Over-protecting leads to stagnation. Letting go speeds timing.'),
+'pents-5': t('冬が転機。困難な3〜6ヶ月を経て回復。助けを求めると早まる。','Winter is the turn. Recovery after difficult 3-6 months. Asking help speeds it.'),
+'pents-6': t('2〜3ヶ月。援助が来るタイミング。人に頼るべき時期。与えるほど巡る。','2-3 months. Timing for aid to arrive. Time to rely on others. Giving speeds return.'),
+'pents-7': t('半年〜1年。収穫まで忍耐。努力は実るが時間がかかる。焦りは禁物。','6 months to 1 year. Patience until harvest. Effort pays but takes time. No impatience.'),
+'pents-8': t('半年〜1年。技術の習得に時間をかける。コツコツが最短ルート。','6 months to 1 year. Take time for skill mastery. Steady work is the shortest path.'),
+'pents-9': t('半年〜1年。独立・自立の達成まで。着実に積み上げた先に到達。','6 months to 1 year. Until independence achieved. Reached through steady building.'),
+'pents-10': t('1年以上。長期的な繁栄。世代を超える視点。急がず大きく考える。','1+ year. Long-term prosperity. Multi-generational view. Think big without rushing.'),
+'pents-11': t('1〜3ヶ月。学びの始まりの時期。新しいスキルが道を開く。今は勉強。','1-3 months. Beginning of learning. New skills open the path. Study now.'),
+'pents-12': t('3〜6ヶ月。着実に進む。急がず一歩ずつ。遅く見えても確実。','3-6 months. Steady progress. Step by step. Looks slow but certain.'),
+'pents-13': t('3〜6ヶ月。冬が吉。実用的・現実的な準備を整えてから動く。','3-6 months. Winter is good. Move after practical preparations are set.'),
+'pents-14': t('半年〜1年。大きな成功には時間がかかる。経営者マインドで長期戦。','6 months to 1 year. Big success takes time. Long game with executive mindset.'),
+};
+
 // ──────────── render ────────────
 const grid = document.getElementById('grid');
 const search = document.getElementById('search');
@@ -1084,7 +1180,9 @@ function renderGrid() {
         cell.className = 'card-cell';
         cell.dataset.st = c.st;
         const kw = (L(c.kw) || []).join(' · ');
-        cell.innerHTML = `<div class="card-cell-head"><span class="card-cell-em">${c.em}</span><span class="card-cell-name">${L(c.n)}</span></div><div class="card-cell-kw">${kw}</div><div class="card-cell-up">▲ ${L(c.u)}</div><div class="card-cell-rev">▼ ${L(c.r)}</div>`;
+        const tm = TIMING[c.st + '-' + c.no];
+        const tmHtml = tm ? `<div class="card-cell-tm">⏱ ${L(tm)}</div>` : '';
+        cell.innerHTML = `<div class="card-cell-head"><span class="card-cell-em">${c.em}</span><span class="card-cell-name">${L(c.n)}</span></div><div class="card-cell-kw">${kw}</div><div class="card-cell-up">▲ ${L(c.u)}</div><div class="card-cell-rev">▼ ${L(c.r)}</div>${tmHtml}`;
         cell.addEventListener('click', () => openModal(c, false));
         grid.appendChild(cell);
     });
@@ -1217,6 +1315,10 @@ function openModal(c, reversed) {
     document.getElementById('d-mr').textContent = L(c.mr);
     document.getElementById('d-hr').textContent = L(c.hr);
     document.getElementById('d-ad').textContent = L(c.ad);
+    const tm = TIMING[c.st + '-' + c.no];
+    const tmEl = document.getElementById('d-tm');
+    if (tm) { tmEl.textContent = L(tm); tmEl.parentElement.style.display = ''; }
+    else { tmEl.parentElement.style.display = 'none'; }
     setTabState(reversed ? 'rev' : 'both');
     modal.classList.add('show');
     document.getElementById('modal-inner').scrollTop = 0;
